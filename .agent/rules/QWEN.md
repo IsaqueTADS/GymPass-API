@@ -4,3 +4,8 @@
 - **SEMPRE responda em Português (Brasil)**: Todas as respostas devem ser em português, independentemente do idioma da entrada do usuário.
 - **SEMPRE leia todo o contexto da aplicação e a pasta `.agent`**: Antes de realizar qualquer alteração, sempre:
   - Leia as regras em `.agent/rules/`
+- **Migrations do Prisma em inglês com tradução**: Ao criar migrations do Prisma:
+  - Sempre usar o comando `npx prisma migrate dev --name <nome_em_ingles>`
+  - O nome da migration deve ser em **inglês**
+  - Sempre mostrar a **tradução em português** para o desenvolvedor entender
+  - Sempre **perguntar ao desenvolvedor** qual o nome da migration antes de executar o comando

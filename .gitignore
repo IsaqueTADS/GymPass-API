@@ -143,3 +143,5 @@ uploads/
 
 # Secrets (keep REGRAS.md as it was in the original)
 REGRAS.md
+
+/src/generated/prisma
