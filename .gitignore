@@ -117,7 +117,6 @@ jest_cache/
 
 # IDE
 .idea/
-.vscode/
 *.swp
 *.swo
 *~
