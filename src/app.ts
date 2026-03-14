@@ -9,7 +9,8 @@ import {
 } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { env } from './env/index.js'
-import { prisma } from './lib/prisma.js'
+import { resgister } from './http/controllers/register.controller.js'
+import { appRoutes } from './http/routes.js'
 
 const envToLogger = {
   dev: {
@@ -75,31 +76,4 @@ app.get(
   },
 )
 
-const registerBodySchema = z.object({
-  name: z.string(),
-  email: z.email(),
-  password: z.string().min(6),
-})
-
-app.route({
-  method: 'POST',
-  url: '/users',
-  schema: {
-    tags: ['Auth'],
-    summary: 'register user',
-    body: registerBodySchema,
-  },
-  handler: async (request, reply) => {
-    const { name, email, password } = request.body
-
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password_hash: password,
-      },
-    })
-
-    return reply.send()
-  },
-})
+app.register(appRoutes)
