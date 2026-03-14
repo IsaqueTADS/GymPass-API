@@ -1,6 +1,5 @@
 import FastifySwagger from '@fastify/swagger'
 import FastifyApiReference from '@scalar/fastify-api-reference'
-import type { FastifyError } from 'fastify'
 import fastify from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
@@ -80,9 +79,11 @@ app.get(
 
 app.register(appRoutes)
 
-app.setErrorHandler((error, request, reply) => {
+app.setErrorHandler((error,_, reply) => {
   if (env.NODE_ENV !== 'production') {
     app.log.error(error)
+  }else {
+    // Algum dia eu coloco log para alguma ferramenta externa em prod, por enquanto essa vlaidação já é suficiente 
   }
   if (error instanceof ZodError) {
     return reply
