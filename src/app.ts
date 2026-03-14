@@ -1,10 +1,15 @@
+import FastifySwagger from '@fastify/swagger'
+import FastifyApiReference from '@scalar/fastify-api-reference'
 import fastify from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+import z from 'zod'
 import { env } from './env/index.js'
+import { prisma } from './lib/prisma.js'
 
 const envToLogger = {
   dev: {
@@ -22,14 +27,79 @@ const envToLogger = {
 
 export const app = fastify({
   logger: envToLogger[env.NODE_ENV] ?? true,
-})
-
-app.withTypeProvider<ZodTypeProvider>
+}).withTypeProvider<ZodTypeProvider>()
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
-app.get('/', (request, reply) => {
-  request.log.info('Some info about the current request')
-  reply.send({ hello: 'world' })
+await app.register(FastifySwagger, {
+  openapi: {
+    openapi: '3.0.0',
+    info: {
+      title: 'GymPass API',
+      description:
+        'A RESTful API built with Fastify for managing gym check-ins, users, and fitness locations. It provides secure authentication, location-based gym search, user registration, and check-in tracking. Designed with scalability and clean architecture principles to support modern fitness applications.',
+      version: '0.1.0',
+    },
+    servers: [
+      {
+        url: env.API_URL,
+        description: 'Development server',
+      },
+    ],
+  },
+  transform: jsonSchemaTransform,
+})
+
+await app.register(FastifyApiReference, {
+  routePrefix: '/docs',
+  configuration: {
+    theme: 'bluePlanet',
+  },
+})
+
+app.get(
+  '/',
+  {
+    schema: {
+      response: {
+        200: z.object({
+          hello: z.string(),
+        }),
+      },
+    },
+  },
+  (request, reply) => {
+    request.log.info('Some info about the current request')
+    reply.status(200).send({ hello: 'world' })
+  },
+)
+
+const registerBodySchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  password: z.string().min(6),
+})
+
+app.route({
+  method: 'POST',
+  url: '/users',
+  schema: {
+    tags: ['Auth'],
+    summary: 'register user',
+    body: registerBodySchema,
+  },
+  handler: async (request, reply) => {
+    const { name, email, password } = request.body
+
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password_hash: password,
+      },
+    })
+
+    return reply.send()
+  },
 })
