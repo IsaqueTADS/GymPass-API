@@ -1,13 +1,16 @@
 import FastifySwagger from '@fastify/swagger'
 import FastifyApiReference from '@scalar/fastify-api-reference'
+import type { FastifyError } from 'fastify'
 import fastify from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
+  hasZodFastifySchemaValidationErrors,
+  isResponseSerializationError,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import z from 'zod'
+import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
 import { appRoutes } from './http/routes.js'
 
@@ -76,3 +79,30 @@ app.get(
 )
 
 app.register(appRoutes)
+
+app.setErrorHandler((error, request, reply) => {
+  if (env.NODE_ENV !== 'production') {
+    app.log.error(error)
+  }
+  if (error instanceof ZodError) {
+    return reply
+      .status(400)
+      .send({ message: 'Validade error', details: error.format() })
+  }
+  if (hasZodFastifySchemaValidationErrors(error)) {
+    console.error(error)
+    return reply.code(400).send({
+      message: 'Falha na validação',
+      details: error.validation,
+    })
+  }
+
+  if (isResponseSerializationError(error)) {
+    return reply.code(500).send({
+      message: 'Falha ao serializar a resposta',
+      details: error.cause.issues,
+    })
+  }
+
+  return reply.status(500).send('Internal server error.')
+})

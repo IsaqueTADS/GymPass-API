@@ -21,7 +21,7 @@ export async function resgister(request: FastifyRequest, reply: FastifyReply) {
       return reply.status(409).send({ message: err.message })
     }
 
-    return reply.status(500).send() // Uma hora qualquer ae eu penso em resolver esse BO aqui ;-)
+    throw err
   }
 
   return reply.send()
