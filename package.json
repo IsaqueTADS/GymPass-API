@@ -28,6 +28,7 @@
     "@prisma/adapter-pg": "7.5.0",
     "@prisma/client": "^6.19.0",
     "@scalar/fastify-api-reference": "1.48.7",
+    "argon2": "0.44.0",
     "dotenv": "17.3.1",
     "fastify": "5.8.2",
     "fastify-type-provider-zod": "6.1.0",
