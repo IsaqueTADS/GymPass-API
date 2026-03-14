@@ -144,5 +144,6 @@ uploads/
 # Secrets (keep REGRAS.md as it was in the original)
 REGRAS.md
 @request/
+SOLID.md
 
 /src/generated/prisma

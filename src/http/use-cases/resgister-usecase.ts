@@ -1,6 +1,5 @@
 import { hash } from 'argon2'
 import { prisma } from '@/lib/prisma.js'
-import { PrismaUserRepository } from '@/repositories/prisma-users-repository.js'
 
 interface RegisterUseCaseRequest {
   name: string
@@ -8,28 +7,28 @@ interface RegisterUseCaseRequest {
   password: string
 }
 
-export async function registerUseCase({
-  name,
-  email,
-  password,
-}: RegisterUseCaseRequest) {
-  const password_hash = await hash(password)
+export class RegisterUseCase {
+  constructor(private usersRepository: any) {}
 
-  const userWithSameEmail = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  })
+  async execute({ name, email, password }: RegisterUseCaseRequest) {
+    const password_hash = await hash(password)
 
-  if (userWithSameEmail) {
-    throw new Error('Email already exists')
+    const userWithSameEmail = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    })
+
+    if (userWithSameEmail) {
+      throw new Error('Email already exists')
+    }
+
+    
+
+    await this.usersRepository.create({
+      name,
+      email,
+      password_hash,
+    })
   }
-
-  const prismaUsersRepository = new PrismaUserRepository()
-
-  await prismaUsersRepository.create({
-    name,
-    email,
-    password_hash,
-  })
 }
