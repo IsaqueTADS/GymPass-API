@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { resgister } from './controllers/register.controller.js'
+import { resgister } from './controllers/register-controller.js'
 
 export const registerBodySchema = z.object({
   name: z.string(),

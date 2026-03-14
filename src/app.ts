@@ -9,7 +9,7 @@ import {
 } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { env } from './env/index.js'
-import { resgister } from './http/controllers/register.controller.js'
+import { resgister } from './http/controllers/register-controller.js'
 import { appRoutes } from './http/routes.js'
 
 const envToLogger = {
