@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { PrismaUserRepository } from '@/repositories/prisma-users-repository.js'
+import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-repository.js'
 import { registerBodySchema } from '../routes.js'
 import { RegisterUseCase } from '../use-cases/resgister-usecase.js'
 
