@@ -30,16 +30,17 @@ describe('Register UseCase', () => {
 
     const password = '1234567'
     const email = 'teste@gmail.com'
+    const name = 'Testador'
 
     await registerUseCase.execute({
-      name: 'Testador',
+      name,
       email,
       password,
     })
 
-    expect(() =>
+    await expect(() =>
       registerUseCase.execute({
-        name: 'Testador',
+        name,
         email,
         password,
       }),
