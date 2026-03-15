@@ -1,11 +1,11 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-repository.js'
-import { registerBodySchema } from '../routes.js'
+import { RegisterBodySchema } from '@/schema/auth-schema.js'
 import { UserAlreadyExistsError } from '../use-cases/errors/user-already-exist-error.js'
 import { RegisterUseCase } from '../use-cases/register-usecase.js'
 
 export async function resgister(request: FastifyRequest, reply: FastifyReply) {
-  const { name, email, password } = registerBodySchema.parse(request.body)
+  const { name, email, password } = RegisterBodySchema.parse(request.body)
 
   try {
     const userRepository = new PrismaUserRepository()

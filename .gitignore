@@ -145,5 +145,7 @@ uploads/
 REGRAS.md
 @request/
 SOLID.md
+docs/*
+docs/SOLID-SCHEMAS-ARCHITECTURE
 
 /src/generated/prisma
