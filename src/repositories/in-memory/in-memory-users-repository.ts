@@ -1,5 +1,5 @@
+import type { CreateUserDTO } from '@/dtos/user/create-user.dto.js'
 import type { User } from '@/generated/prisma/client.js'
-import type { UserCreateInput } from '@/generated/prisma/models.js'
 import type { usersRepository } from '../users-repository.js'
 
 export class InMemoryUsersRepository implements usersRepository {
@@ -13,7 +13,7 @@ export class InMemoryUsersRepository implements usersRepository {
 
     return user
   }
-  async create(data: UserCreateInput) {
+  async create(data: CreateUserDTO) {
     const user = {
       id: 'gbytjfdaskhjdapHJDPai',
       name: data.name,
