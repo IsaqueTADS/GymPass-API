@@ -1,4 +1,4 @@
-import type { Prisma } from '@/generated/prisma/client.js'
+import type { CreateUserDTO } from '@/dtos/user/create-user.dto.js'
 import { prisma } from '@/lib/prisma.js'
 import type { usersRepository } from '../users-repository.js'
 
@@ -11,7 +11,7 @@ export class PrismaUserRepository implements usersRepository {
     })
     return user
   }
-  async create(data: Prisma.UserCreateInput) {
+  async create(data: CreateUserDTO) {
     const user = await prisma.user.create({
       data,
     })

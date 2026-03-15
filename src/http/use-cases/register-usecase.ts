@@ -1,14 +1,8 @@
 import { hash } from 'argon2'
+import type { User } from '@/dtos/user/user.js'
 import type { usersRepository } from '@/repositories/users-repository.js'
 import { UserAlreadyExistsError } from './errors/user-already-exist-error.js'
 
-interface User {
-  id: string
-  name: string
-  email: string
-  password_hash: string
-  created_at: Date
-}
 interface InputDTO {
   name: string
   email: string
