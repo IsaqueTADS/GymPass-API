@@ -6,7 +6,7 @@ import {
 } from '@/http/schemas/auth-schema.js'
 import { authenticateController } from './controllers/authenticate-controller.js'
 import { resgisterController } from './controllers/register-controller.js'
-import { errorSchema } from './schemas/error-schema.js'
+import { ErrorSchema } from './schemas/error-schema.js'
 import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
 
 export const appRoutes: FastifyPluginAsyncZod = async (app) => {
@@ -20,7 +20,7 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       response: {
         201: z.null(),
         400: ValidationErrorSchema,
-        409: errorSchema,
+        409: ErrorSchema,
       },
     },
     handler: resgisterController,
@@ -35,7 +35,7 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       body: AuthenticateBodySchema,
       response: {
         201: z.null(),
-        400: ValidationErrorSchema
+        400: z.union([ValidationErrorSchema, ErrorSchema]),
       },
     },
     handler: authenticateController,

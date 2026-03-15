@@ -1,5 +1,5 @@
 import z from 'zod'
 
-export const errorSchema = z.object({
+export const ErrorSchema = z.object({
   message: z.string(),
 })

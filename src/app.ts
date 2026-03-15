@@ -79,11 +79,11 @@ app.get(
 
 app.register(appRoutes)
 
-app.setErrorHandler((error,_, reply) => {
+app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {
-    app.log.error(error)
-  }else {
-    // Algum dia eu coloco log para alguma ferramenta externa em prod, por enquanto essa validação já é suficiente 
+    // app.log.error(error)
+  } else {
+    // Algum dia eu coloco log para alguma ferramenta externa em prod, por enquanto essa validação já é suficiente
   }
   if (error instanceof ZodError) {
     return reply
@@ -91,10 +91,12 @@ app.setErrorHandler((error,_, reply) => {
       .send({ message: 'Falha na validação', details: error.format() })
   }
   if (hasZodFastifySchemaValidationErrors(error)) {
-    console.error(error)
+    console.error(error.message)
     return reply.code(400).send({
       message: 'Falha na validação',
-      details: error.validation,
+      details: error.validation.map((item) => {
+        return { error: item.message }
+      }),
     })
   }
 
