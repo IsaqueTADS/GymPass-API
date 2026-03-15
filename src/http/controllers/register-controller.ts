@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { RegisterBodySchema } from '@/http/schemas/auth-schema.js'
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-repository.js'
-import { RegisterBodySchema } from '@/schema/auth-schema.js'
 import { UserAlreadyExistsError } from '../use-cases/errors/user-already-exist-error.js'
 import { RegisterUseCase } from '../use-cases/register-usecase.js'
 
