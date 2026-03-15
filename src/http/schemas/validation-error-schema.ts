@@ -14,5 +14,5 @@ export const ValidationErrorSchema = z.object({
         inclusive: z.boolean(),
       }),
     }),
-  ),
+  ).optional(),
 })

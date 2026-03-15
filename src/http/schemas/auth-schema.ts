@@ -5,3 +5,7 @@ export const RegisterBodySchema = z.object({
   email: z.email('Email inválido'),
   password: z.string().min(6, 'A senha deve conter no minimo 6 caracteres'),
 })
+export const AuthenticateBodySchema = z.object({
+  email: z.email('Email inválido'),
+  password: z.string(),
+})
