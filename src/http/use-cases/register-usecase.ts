@@ -3,19 +3,24 @@ import type { User } from '@/dtos/user/user.js'
 import type { usersRepository } from '@/repositories/users-repository.js'
 import { UserAlreadyExistsError } from './errors/user-already-exist-error.js'
 
-interface InputDTO {
+interface RegisterUseCaseRequest {
   name: string
   email: string
   password: string
 }
-interface OutputDTO {
+
+interface RegisterUseCaseResponse {
   user: User
 }
 
 export class RegisterUseCase {
   constructor(private usersRepository: usersRepository) {}
 
-  async execute({ name, email, password }: InputDTO): Promise<OutputDTO> {
+  async execute({
+    name,
+    email,
+    password,
+  }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
     const password_hash = await hash(password)
 
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
