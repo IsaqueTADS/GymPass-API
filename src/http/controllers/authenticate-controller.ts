@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { AuthenticateBodySchema } from '@/http/schemas/auth-schema.js'
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-repository.js'
-import { AuthenticateUseCase } from '../use-cases/authenticate-usecase.js'
-import { InvalidCredentialsError } from '../use-cases/errors/invalid-credentials-error.js'
+import { AuthenticateUseCase } from '../../use-cases/authenticate-usecase.js'
+import { InvalidCredentialsError } from '../../use-cases/errors/invalid-credentials-error.js'
 
 export async function authenticateController(
   request: FastifyRequest,

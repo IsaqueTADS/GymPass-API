@@ -34,7 +34,7 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       summary: 'authenticate user',
       body: AuthenticateBodySchema,
       response: {
-        201: z.null(),
+        200: z.null(),
         400: z.union([ValidationErrorSchema, ErrorSchema]),
       },
     },

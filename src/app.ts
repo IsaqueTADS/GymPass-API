@@ -81,7 +81,7 @@ app.register(appRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {
-    // app.log.error(error)
+    app.log.error(error)
   } else {
     // Algum dia eu coloco log para alguma ferramenta externa em prod, por enquanto essa validação já é suficiente
   }
@@ -90,6 +90,7 @@ app.setErrorHandler((error, _, reply) => {
       .status(400)
       .send({ message: 'Falha na validação', details: error.format() })
   }
+
   if (hasZodFastifySchemaValidationErrors(error)) {
     console.error(error.message)
     return reply.code(400).send({

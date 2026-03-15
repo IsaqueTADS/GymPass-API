@@ -1,18 +1,21 @@
 import { verify } from 'argon2'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository.js'
 import { UserAlreadyExistsError } from './errors/user-already-exist-error.js'
 import { RegisterUseCase } from './register-usecase.js'
 
+let usersRepository: InMemoryUsersRepository
+let sut: RegisterUseCase
+
 describe('Register UseCase', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new RegisterUseCase(usersRepository)
+  })
   it('A senha do usuário precisa estar criptografada', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
-
     const password = '1234567'
 
-    const { user } = await registerUseCase.execute({
+    const { user } = await sut.execute({
       name: 'Testador',
       email: 'teste@gmail.com',
       password,
@@ -24,22 +27,18 @@ describe('Register UseCase', () => {
   })
 
   it('O usuário não deve se cadastrar como um e-mail duplicado', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
-
     const password = '1234567'
     const email = 'teste@gmail.com'
     const name = 'Testador'
 
-    await registerUseCase.execute({
+    await sut.execute({
       name,
       email,
       password,
     })
 
     await expect(() =>
-      registerUseCase.execute({
+      sut.execute({
         name,
         email,
         password,
@@ -47,14 +46,10 @@ describe('Register UseCase', () => {
     ).rejects.toBeInstanceOf(UserAlreadyExistsError)
   })
   it('Deve ser possivel se cadastrar', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
-
     const password = '1234567'
     const email = 'teste@gmail.com'
 
-    const { user } = await registerUseCase.execute({
+    const { user } = await sut.execute({
       name: 'Testador',
       email,
       password,
