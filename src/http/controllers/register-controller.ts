@@ -4,7 +4,7 @@ import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-reposit
 import { UserAlreadyExistsError } from '../use-cases/errors/user-already-exist-error.js'
 import { RegisterUseCase } from '../use-cases/register-usecase.js'
 
-export async function resgister(request: FastifyRequest, reply: FastifyReply) {
+export async function resgisterController(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, password } = RegisterBodySchema.parse(request.body)
 
   try {
