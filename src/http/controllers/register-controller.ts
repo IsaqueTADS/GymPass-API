@@ -24,5 +24,5 @@ export async function resgisterController(request: FastifyRequest, reply: Fastif
     throw err
   }
 
-  return reply.send()
+  return reply.status(201).send()
 }
