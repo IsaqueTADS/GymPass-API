@@ -2,7 +2,7 @@ import { verify } from 'argon2'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository.js'
 import { UserAlreadyExistsError } from './errors/user-already-exist-error.js'
-import { RegisterUseCase } from './register-usecase.js'
+import { RegisterUseCase } from './register-use-case.js'
 
 let usersRepository: InMemoryUsersRepository
 let sut: RegisterUseCase

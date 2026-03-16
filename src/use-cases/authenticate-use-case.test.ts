@@ -1,7 +1,7 @@
 import { hash } from 'argon2'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository.js'
-import { AuthenticateUseCase } from './authenticate-usecase.js'
+import { AuthenticateUseCase } from './authenticate-use-case.js'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error.js'
 
 let usersRepository: InMemoryUsersRepository
@@ -43,7 +43,6 @@ describe('Authenticate UseCase', () => {
   })
 
   it('Não deve ser possivel autenticar com senha inválida', async () => {
-   
     const password = '1234567'
     const email = 'teste@gmail.com'
 

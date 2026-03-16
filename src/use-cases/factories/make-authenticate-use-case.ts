@@ -1,5 +1,5 @@
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-users-repository.js'
-import { AuthenticateUseCase } from '../authenticate-usecase.js'
+import { AuthenticateUseCase } from '../authenticate-use-case.js'
 
 export function makeAuthenticateUseCase() {
   const userRepository = new PrismaUserRepository()
