@@ -43,14 +43,11 @@ describe('Authenticate UseCase', () => {
   })
 
   it('Não deve ser possivel autenticar com senha inválida', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-
-    const sut = new AuthenticateUseCase(inMemoryUsersRepository)
-
+   
     const password = '1234567'
     const email = 'teste@gmail.com'
 
-    await inMemoryUsersRepository.create({
+    await usersRepository.create({
       name: 'Testador',
       email,
       password_hash: await hash(password),
