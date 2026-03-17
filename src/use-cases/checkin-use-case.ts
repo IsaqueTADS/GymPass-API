@@ -1,22 +1,27 @@
-import type { CheckIn } from '@/generated/prisma/client.js'
-import type { usersRepository } from '@/repositories/users-repository.js'
+import type { CheckIn } from '@/dtos/checkin/checkin.js'
+import type { CheckInsRepository } from '@/repositories/check-ins-repository.js'
 
-interface CheckinUseCaseRequest {
+interface CheckInUseCaseRequest {
   userId: string
   gymId: string
 }
 
-interface CheckinUseCaseResponse {
-  CheckIn: CheckIn
+interface CheckInUseCaseResponse {
+  checkIn: CheckIn
 }
 
-export class CheckinUseCase {
-  constructor(private userRepository: usersRepository) {}
+export class CheckInUseCase {
+  constructor(private checkInsRepository: CheckInsRepository) {}
 
   async execute({
     userId,
     gymId,
-  }: CheckinUseCaseRequest): Promise<CheckinUseCaseResponse> {
-    return
+  }: CheckInUseCaseRequest): Promise<CheckInUseCaseResponse> {
+    const checkIn = await this.checkInsRepository.create({
+      gym_id: gymId,
+      user_id: userId,
+    })
+
+    return { checkIn }
   }
 }
