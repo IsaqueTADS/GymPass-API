@@ -150,4 +150,7 @@ docs/SOLID-SCHEMAS-ARCHITECTURE
 codigoai.ts
 codigoai2.ts
 
+# Implementation plans
+UPLOAD-IMPLEMENTATION-PLAN.md
+
 /src/generated/prisma
