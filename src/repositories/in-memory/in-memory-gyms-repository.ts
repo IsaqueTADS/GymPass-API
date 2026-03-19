@@ -8,13 +8,13 @@ export class InMemoryGymsRepository implements GymsRepository {
 
   async create(data: CreateGymDTO): Promise<Gym> {
     const gym = {
-      id: randomUUID(),
+      id: data.id ?? randomUUID(),
       title: data.title,
       description: data.description ?? null,
       phone: data.phone,
       latitude: data.latitude,
       longitude: data.longitude,
-    } 
+    }
 
     this.items.push(gym)
 
