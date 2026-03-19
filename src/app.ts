@@ -149,15 +149,17 @@ app.route({
       const result = await UploadGateway.sendUploadFile(data)
 
       console.log(result)
-      console.log("olá")
+      console.log('olá')
 
       return {
         message: 'Upload bem-sucedido!',
-        url: result.secure_url,
+        url: result.url ,
         public_id: result.public_id,
       }
-    } catch (error: any) {
-      return reply.status(500).send({ error: error.message })
+    } catch (error) {
+      if(error instanceof UploadApiErrorResponse){
+
+      }
     }
   },
 })
