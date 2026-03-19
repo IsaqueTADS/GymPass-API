@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart'
 import FastifySwagger from '@fastify/swagger'
 import FastifyApiReference from '@scalar/fastify-api-reference'
 import fastify from 'fastify'
@@ -58,6 +59,13 @@ await app.register(FastifyApiReference, {
   configuration: {
     theme: 'bluePlanet',
   },
+})
+await app.register(fastifyMultipart, {
+  attachFieldsToBody: true,
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  }
+  
 })
 
 app.get(

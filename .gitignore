@@ -147,5 +147,7 @@ REGRAS.md
 SOLID.md
 docs/*
 docs/SOLID-SCHEMAS-ARCHITECTURE
+codigoai.ts
+codigoai2.ts
 
 /src/generated/prisma
