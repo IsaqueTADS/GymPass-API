@@ -3,18 +3,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository.js'
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository.js'
 import { CheckInUseCase } from './check-in-use-case.js'
+import { MaxDistanceError } from './errors/max-distance-error.js'
+import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error.js'
 
 let gymsRepository: InMemoryGymsRepository
 let inMemoryCheckInsRepository: InMemoryCheckInsRepository
 let sut: CheckInUseCase
 
 describe('Check in use case', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     gymsRepository = new InMemoryGymsRepository()
     inMemoryCheckInsRepository = new InMemoryCheckInsRepository()
     sut = new CheckInUseCase(inMemoryCheckInsRepository, gymsRepository)
 
-    gymsRepository.items.push({
+    await gymsRepository.create({
       id: 'gym-1',
       title: 'Progamador da shoope',
       description: 'vazio',
@@ -61,7 +63,7 @@ describe('Check in use case', () => {
         userLatitude: 0,
         userLongitude: 0,
       }),
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckInsError)
   })
   it('O usuário  pode fazer 2 ou mais check-ins em dias diferentes', async () => {
     vi.setSystemTime(new Date(2026, 1, 1, 14, 0, 0))
@@ -88,7 +90,7 @@ describe('Check in use case', () => {
   })
 
   it('O usuáriuo não pode fazer check-in se não estiver perto da academia', async () => {
-    gymsRepository.items.push({
+    gymsRepository.create({
       id: 'gym-2',
       title: 'Progamador da shoope',
       description: 'vazio',
@@ -104,6 +106,6 @@ describe('Check in use case', () => {
         userLatitude: -16.8313143,
         userLongitude: -42.0511108,
       }),
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(MaxDistanceError)
   })
 })
