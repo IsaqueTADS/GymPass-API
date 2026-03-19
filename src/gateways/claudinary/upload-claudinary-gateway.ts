@@ -1,3 +1,4 @@
+import type { MultipartFile } from '@fastify/multipart'
 import { v2 as cloudinary } from 'cloudinary'
 import { env } from '@/env/index.js'
 import type { UploadGateway } from '../upload-gateway.js'
@@ -9,8 +10,10 @@ export class UploadClaudinaryGateway implements UploadGateway {
       api_key: env.CLOUDINARY_KEY,
       api_secret: env.CLOUDINARY_SECRET,
     })
+
+    console.log(env.CLOUDINARY_NAME, env.CLOUDINARY_KEY, env.CLOUDINARY_SECRET)
   }
-  sendUploadFile(data: ): Promise<any> {
+  async sendUploadFile(data: MultipartFile): Promise<any> {
     const uploadToCloudinary = () => {
       return new Promise((resolve, rejects) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -20,7 +23,13 @@ export class UploadClaudinaryGateway implements UploadGateway {
             else resolve(result)
           },
         )
+        // "Pipar" o arquivo recebido para o stream do Cloudinary
+        data.file.pipe(stream)
       })
     }
+
+    const result = await uploadToCloudinary()
+
+    return result
   }
 }

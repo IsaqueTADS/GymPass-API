@@ -12,6 +12,7 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
+import { UploadClaudinaryGateway } from './gateways/claudinary/upload-claudinary-gateway.js'
 import { appRoutes } from './http/routes.js'
 
 const envToLogger = {
@@ -61,11 +62,9 @@ await app.register(FastifyApiReference, {
   },
 })
 await app.register(fastifyMultipart, {
-  attachFieldsToBody: true,
   limits: {
-    fileSize: 10 * 1024 * 1024
-  }
-  
+    fileSize: 10 * 1024 * 1024,
+  },
 })
 
 app.get(
@@ -117,4 +116,48 @@ app.setErrorHandler((error, _, reply) => {
   }
 
   return reply.status(500).send('Internal server error.')
+})
+
+app.route({
+  method: 'patch',
+  url: '/uploads',
+  handler: async (request, reply) => {
+    const data = await request.file()
+
+    if (!data)
+      return reply.status(400).send({ error: 'Nenhum arquivo enviado' })
+
+    // Define uma promessa para o upload do Cloudinary
+    // const uploadToCloudinary = () => {
+    //   return new Promise((resolve, reject) => {
+    //     // Criar stream de upload
+    //     const stream = cloudinary.uploader.upload_stream(
+    //       { folder: 'fastify_uploads' }, // Opcional: pasta no Cloudinary
+    //       (error, result) => {
+    //         if (result) resolve(result)
+    //         else reject(error)
+    //       },
+    //     )
+    //     // "Pipar" o arquivo recebido para o stream do Cloudinary
+    //     data.file.pipe(stream)
+    //   })
+    // }
+
+    try {
+      const UploadGateway = new UploadClaudinaryGateway()
+
+      const result = await UploadGateway.sendUploadFile(data)
+
+      console.log(result)
+      console.log("olá")
+
+      return {
+        message: 'Upload bem-sucedido!',
+        url: result.secure_url,
+        public_id: result.public_id,
+      }
+    } catch (error: any) {
+      return reply.status(500).send({ error: error.message })
+    }
+  },
 })
