@@ -19,8 +19,7 @@ export class CheckInUseCase {
   }: CheckInUseCaseRequest): Promise<CheckInUseCaseResponse> {
     const currentDate = new Date()
 
-    const isCheckInDateConflict =
-      await this.checkInsRepository.findByUserIdOnDate(userId, currentDate)
+    const isCheckInDateConflict = await this.checkInsRepository.findByUserIdOnDate(userId, currentDate)
 
     if (isCheckInDateConflict) {
       throw new Error()

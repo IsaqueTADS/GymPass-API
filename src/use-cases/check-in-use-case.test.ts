@@ -44,7 +44,7 @@ describe('Check in use case', () => {
       }),
     ).rejects.toBeInstanceOf(Error)
   })
-  it('O usuário  pode fazer 2 ou mais check-ins emd ias diferentes', async () => {
+  it('O usuário  pode fazer 2 ou mais check-ins em dias diferentes', async () => {
     vi.setSystemTime(new Date(2026, 1, 1, 14, 0, 0))
 
     const userId = 'userid1234'
@@ -54,7 +54,7 @@ describe('Check in use case', () => {
       gymId: randomUUID(),
     })
 
-    vi.setSystemTime(new Date(2026, 1, 1, 14, 0, 0))
+    vi.setSystemTime(new Date(2026, 1, 2, 14, 0, 0))
 
     const { checkIn } = await sut.execute({
       userId,
