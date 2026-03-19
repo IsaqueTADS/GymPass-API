@@ -5,7 +5,16 @@
 - **SEMPRE leia todo o contexto da aplicação e a pasta `.agent`**: Antes de realizar qualquer alteração, sempre:
   - Leia as regras em `.agent/rules/`
 - **Migrations do Prisma em inglês com tradução**: Ao criar migrations do Prisma:
-  - Sempre usar o comando `npx prisma migrate dev --name <nome_em_ingles>`
+  - Sempre usar o comando via npm script: `npm run db:migrate` (equivalente a `prisma migrate dev`)
   - O nome da migration deve ser em **inglês**
   - Sempre mostrar a **tradução em português** para o desenvolvedor entender
   - Sempre **perguntar ao desenvolvedor** qual o nome da migration antes de executar o comando
+- **Scripts do package.json**: Sempre utilizar os scripts definidos no `package.json` ao invés de comandos diretos:
+  - `npm run db:generate` → `prisma generate`
+  - `npm run db:migrate` → `prisma migrate dev`
+  - `npm run db:migrate:deploy` → `prisma migrate deploy`
+  - `npm run db:migrate:reset` → `prisma migrate reset`
+  - `npm run db:push` → `prisma db push`
+  - `npm run db:seed` → `prisma db seed`
+  - `npm run db:studio` → `prisma studio`
+  - `npm run db:status` → `prisma migrate status`

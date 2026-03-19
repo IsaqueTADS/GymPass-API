@@ -1,3 +1,9 @@
+import type { MultipartFile } from '@fastify/multipart'
+
+export type UploadGatewayResponse = {
+  url: string
+  public_id?: string
+}
 export interface UploadGateway {
-  sendUpload(file: any): Promise<any>
+  sendUploadFile(data: MultipartFile): Promise<UploadGatewayResponse>
 }
