@@ -5,6 +5,6 @@ export interface Gym {
   title: string
   description: string | null
   phone: string | null
-  latitude: Decimal
-  longitude: Decimal
+  latitude: number
+  longitude: number
 }

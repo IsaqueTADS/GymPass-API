@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto'
-import { Decimal } from '@prisma/client/runtime/library'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository.js'
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository.js'
@@ -20,8 +19,8 @@ describe('Check in use case', () => {
       title: 'Progamador da shoope',
       description: 'vazio',
       phone: '',
-      longitude: new Decimal(0),
-      latitude: new Decimal(0),
+      longitude: 0,
+      latitude: 0,
     })
 
     vi.useFakeTimers()
@@ -86,5 +85,25 @@ describe('Check in use case', () => {
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
+  })
+
+  it('O usuáriuo não pode fazer check-in se não estiver perto da academia', async () => {
+    gymsRepository.items.push({
+      id: 'gym-2',
+      title: 'Progamador da shoope',
+      description: 'vazio',
+      phone: '',
+      longitude: -16.8495227,
+      latitude: -42.0612613,
+    })
+
+    expect(() =>
+      sut.execute({
+        userId: randomUUID(),
+        gymId: 'gym-2',
+        userLatitude: -16.8313143,
+        userLongitude: -42.0511108,
+      }),
+    ).rejects.toBeInstanceOf(Error)
   })
 })

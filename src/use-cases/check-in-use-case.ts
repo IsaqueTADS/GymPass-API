@@ -1,6 +1,7 @@
 import type { CheckIn } from '@/dtos/checkin/checkin.js'
 import type { CheckInsRepository } from '@/repositories/check-ins-repository.js'
 import type { GymsRepository } from '@/repositories/gyms-repository.js'
+import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates.js'
 import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 
 interface CheckInUseCaseRequest {
@@ -30,6 +31,23 @@ export class CheckInUseCase {
 
     if (!gym) {
       throw new ResourceNotFoundError()
+    }
+
+    const distance = getDistanceBetweenCoordinates(
+      {
+        latitude: userLatitude,
+        longitude: userLongitude,
+      },
+      {
+        latitude: gym.latitude,
+        longitude: gym.longitude,
+      },
+    )
+
+    const MAX_DISTANCE_IN_KM = 0.1  
+
+    if (distance > MAX_DISTANCE_IN_KM) {
+      throw new Error()
     }
 
     const isCheckInDateConflict =
