@@ -1,9 +1,13 @@
 import type { CheckIn } from '@/dtos/checkin/checkin.js'
 import type { CheckInsRepository } from '@/repositories/check-ins-repository.js'
+import type { GymsRepository } from '@/repositories/gyms-repository.js'
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 
 interface CheckInUseCaseRequest {
   userId: string
   gymId: string
+  userLatitude: number
+  userLongitude: number
 }
 
 interface CheckInUseCaseResponse {
@@ -11,15 +15,25 @@ interface CheckInUseCaseResponse {
 }
 
 export class CheckInUseCase {
-  constructor(private checkInsRepository: CheckInsRepository) {}
+  constructor(
+    private checkInsRepository: CheckInsRepository,
+    private gymsRepository: GymsRepository,
+  ) {}
 
   async execute({
     userId,
     gymId,
+    userLatitude,
+    userLongitude,
   }: CheckInUseCaseRequest): Promise<CheckInUseCaseResponse> {
-    const currentDate = new Date()
+    const gym = await this.gymsRepository.findById(gymId)
 
-    const isCheckInDateConflict = await this.checkInsRepository.findByUserIdOnDate(userId, currentDate)
+    if (!gym) {
+      throw new ResourceNotFoundError()
+    }
+
+    const isCheckInDateConflict =
+      await this.checkInsRepository.findByUserIdOnDate(userId, new Date())
 
     if (isCheckInDateConflict) {
       throw new Error()
