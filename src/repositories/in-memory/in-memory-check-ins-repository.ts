@@ -7,12 +7,15 @@ import type { CheckInsRepository } from '../check-ins-repository.js'
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public chekIns: CheckIn[] = []
 
-  async findManyByUserId(userId: string): Promise<CheckIn[]> {
+  async findManyByUserId(userId: string, page: number): Promise<CheckIn[]> {
     const checkIns = this.chekIns.filter(
       (checkIn) => checkIn.user_id === userId,
     )
-    
-    return checkIns
+
+    return checkIns.slice((page - 1) * 20, page * 20)
+    // 1 =  0  a 20 
+    // 2 =  20 a 40 
+    // 3 =  40 a 60
   }
 
   async findByUserIdOnDate(userId: string, date: Date) {
@@ -22,7 +25,8 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     const checkIn = this.chekIns.find((checkIn) => {
       const checkInDate = dayjs(checkIn.created_at)
 
-      const isOnSameData = checkInDate.isAfter(startOfTheDay) && checkInDate.isBefore(endOfTheDay)
+      const isOnSameData =
+        checkInDate.isAfter(startOfTheDay) && checkInDate.isBefore(endOfTheDay)
 
       return checkIn.user_id === userId && isOnSameData
     })
