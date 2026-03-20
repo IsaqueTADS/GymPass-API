@@ -1,10 +1,31 @@
 import { randomUUID } from 'node:crypto'
 import type { CreateGymDTO } from '@/dtos/gyms/create-gym.dto.js'
 import type { Gym } from '@/dtos/gyms/gym.js'
-import type { GymsRepository } from '../gyms-repository.js'
+import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates.js'
+import type {
+  FindManyGymsNearByParams,
+  GymsRepository,
+} from '../gyms-repository.js'
 
 export class InMemoryGymsRepository implements GymsRepository {
   public items: Gym[] = []
+
+  async findManyGymsNearBy(params: FindManyGymsNearByParams): Promise<Gym[]> {
+    return this.items.filter((item) => {
+      const distance = getDistanceBetweenCoordinates(
+        {
+          latitude: params.latitude,
+          longitude: params.longitude,
+        },
+        {
+          latitude: item.latitude,
+          longitude: item.longitude,
+        },
+      )
+
+      return distance < 10
+    })
+  }
 
   async create(data: CreateGymDTO): Promise<Gym> {
     const gym = {
