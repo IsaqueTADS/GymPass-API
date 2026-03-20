@@ -1,9 +1,9 @@
 import type { CheckIn } from '@/dtos/checkin/checkin.js'
-import type { Gym } from '@/dtos/gyms/gym.js'
 import type { CheckInsRepository } from '@/repositories/check-ins-repository.js'
 
 interface FetchUserCheckInsHistoryUseCaseRequest {
   userId: string
+  page: number
 }
 
 type FetchUserCheckInsHistoryUseCaseResponse = {
@@ -15,8 +15,9 @@ export class FetchUserCheckInsHistoryUseCase {
 
   async execute({
     userId,
+    page
   }: FetchUserCheckInsHistoryUseCaseRequest): Promise<FetchUserCheckInsHistoryUseCaseResponse> {
-    const checkIns = await this.checkInsRepository.findManyByUserId(userId)
+    const checkIns = await this.checkInsRepository.findManyByUserId(userId, page)
 
     return { checkIns }
   }
