@@ -53,7 +53,6 @@ describe('Search gyms use case', () => {
 
     const { gyms } = await sut.execute({ query: 'gym', page: 2 })
 
-    console.log(gyms)
 
     expect(gyms).toHaveLength(5)
     expect(gyms).toEqual([

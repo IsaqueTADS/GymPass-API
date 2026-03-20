@@ -99,7 +99,7 @@ describe('Check in use case', () => {
       latitude: -42.0612613,
     })
 
-    expect(() =>
+   await expect(() =>
       sut.execute({
         userId: randomUUID(),
         gymId: 'gym-2',
