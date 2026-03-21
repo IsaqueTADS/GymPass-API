@@ -14,6 +14,7 @@ import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
 import { UploadClaudinaryGateway } from './gateways/claudinary/upload-claudinary-gateway.js'
 import { appRoutes } from './http/routes.js'
+import { handleSingleUpload } from './http/utils/upload-handler.js'
 
 const envToLogger = {
   dev: {
@@ -127,29 +128,16 @@ app.route({
     if (!data)
       return reply.status(400).send({ error: 'Nenhum arquivo enviado' })
 
-    // Define uma promessa para o upload do Cloudinary
-    // const uploadToCloudinary = () => {
-    //   return new Promise((resolve, reject) => {
-    //     // Criar stream de upload
-    //     const stream = cloudinary.uploader.upload_stream(
-    //       { folder: 'fastify_uploads' }, // Opcional: pasta no Cloudinary
-    //       (error, result) => {
-    //         if (result) resolve(result)
-    //         else reject(error)
-    //       },
-    //     )
-    //     // "Pipar" o arquivo recebido para o stream do Cloudinary
-    //     data.file.pipe(stream)
-    //   })
-    // }
-
     try {
+      const uploadFile = await handleSingleUpload(data)
+
+      console.log(uploadFile)
+
       const UploadGateway = new UploadClaudinaryGateway()
 
-      const result = await UploadGateway.sendUploadFile(data)
+      const result = await UploadGateway.sendUploadFile(uploadFile)
 
-      console.log(result)
-      console.log('olá')
+    
 
       return {
         message: 'Upload bem-sucedido!',
@@ -157,8 +145,7 @@ app.route({
         public_id: result.public_id,
       }
     } catch (error) {
-      if(error instanceof UploadApiErrorResponse){
-
+      if (error instanceof UploadApiErrorResponse) {
       }
     }
   },
