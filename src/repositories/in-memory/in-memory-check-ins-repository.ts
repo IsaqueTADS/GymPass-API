@@ -7,7 +7,29 @@ import type { CheckInsRepository } from '../check-ins-repository.js'
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public chekIns: CheckIn[] = []
 
- async countByUserId(userId: string): Promise<number> {
+  async save(checkIn: CheckIn): Promise<CheckIn> {
+    const CheckInIndex = this.chekIns.findIndex(
+      (item) => item.id === checkIn.id,
+    )
+
+    if (CheckInIndex >= 0) {
+      this.chekIns[CheckInIndex] = checkIn
+    }
+
+    return checkIn
+  }
+
+  async findById(id: string): Promise<CheckIn | null> {
+    const checkIn = this.chekIns.find((item) => item.id === id)
+
+    if (!checkIn) {
+      return null
+    }
+
+    return checkIn
+  }
+
+  async countByUserId(userId: string): Promise<number> {
     return this.chekIns.filter((checkIn) => checkIn.user_id === userId).length
   }
 
