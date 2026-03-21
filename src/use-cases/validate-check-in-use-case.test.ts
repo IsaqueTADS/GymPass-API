@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository.js'
+import { LateValidationCheckInsError } from './errors/late-validation-check-ins-error.js'
 import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 import { ValidateCheckInUseCase } from './validate-check-in-use-case.js'
 
@@ -45,5 +46,24 @@ describe('Validate check in use case', () => {
         checkId: randomUUID(),
       }),
     ).rejects.toBeInstanceOf(ResourceNotFoundError)
+  })
+  it(' O check-in só pode ser validado até 20 minutos após criado', async () => {
+    vi.setSystemTime(new Date(2026, 1, 1, 14, 40))
+    const userId = randomUUID()
+
+    const userCheckIn = await inMemoryCheckInsRepository.create({
+      user_id: userId,
+      gym_id: 'gym-1',
+    })
+
+    const advanceTimer = 1000 * 60 * 21 //21minutes
+
+    vi.advanceTimersByTime(advanceTimer)
+
+    await expect(() =>
+      sut.execute({
+        checkId: userCheckIn.id,
+      }),
+    ).rejects.toBeInstanceOf(LateValidationCheckInsError)
   })
 })
