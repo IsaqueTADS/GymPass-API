@@ -7,14 +7,18 @@ import type { CheckInsRepository } from '../check-ins-repository.js'
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public chekIns: CheckIn[] = []
 
+ async countByUserId(userId: string): Promise<number> {
+    return this.chekIns.filter((checkIn) => checkIn.user_id === userId).length
+  }
+
   async findManyByUserId(userId: string, page: number): Promise<CheckIn[]> {
     const checkIns = this.chekIns.filter(
       (checkIn) => checkIn.user_id === userId,
     )
 
     return checkIns.slice((page - 1) * 20, page * 20)
-    // 1 =  0  a 20 
-    // 2 =  20 a 40 
+    // 1 =  0  a 20
+    // 2 =  20 a 40
     // 3 =  40 a 60
   }
 
