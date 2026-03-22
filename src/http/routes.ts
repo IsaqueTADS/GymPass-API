@@ -5,6 +5,7 @@ import {
   RegisterBodySchema,
 } from '@/http/schemas/auth-schema.js'
 import { authenticateController } from './controllers/authenticate-controller.js'
+import { profileController } from './controllers/profile-controller.js'
 import { resgisterController } from './controllers/register-controller.js'
 import { ErrorSchema } from './schemas/error-schema.js'
 import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
@@ -39,5 +40,13 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     handler: authenticateController,
+  })
+
+  /*Auth*/
+
+  app.route({
+    method: 'GET',
+    url: '/me',
+    handler: profileController,
   })
 }
