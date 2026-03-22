@@ -48,6 +48,11 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     method: 'GET',
+    schema: {
+      security: [{ bearerAuth: [] }],
+      tags: ['me'],
+      
+    },
     url: '/me',
     handler: profileController,
   })

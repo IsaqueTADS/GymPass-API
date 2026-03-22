@@ -47,6 +47,15 @@ await app.register(FastifySwagger, {
         'A RESTful API built with Fastify for managing gym check-ins, users, and fitness locations. It provides secure authentication, location-based gym search, user registration, and check-in tracking. Designed with scalability and clean architecture principles to support modern fitness applications.',
       version: '0.1.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
     servers: [
       {
         url: env.API_URL,
@@ -121,7 +130,7 @@ app.setErrorHandler((error, _, reply) => {
     })
   }
 
-  return reply.status(500).send('Internal server error.')
+  return reply.status(500).send({ message: 'Internal server error.' })
 })
 
 app.route({
