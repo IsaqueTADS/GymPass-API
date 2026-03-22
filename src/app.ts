@@ -1,3 +1,4 @@
+import fastifyJwt from '@fastify/jwt'
 import fastifyMultipart from '@fastify/multipart'
 import FastifySwagger from '@fastify/swagger'
 import FastifyApiReference from '@scalar/fastify-api-reference'
@@ -66,6 +67,10 @@ await app.register(fastifyMultipart, {
   limits: {
     fileSize: 10 * 1024 * 1024,
   },
+})
+
+await app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
 })
 
 app.get(
@@ -137,11 +142,9 @@ app.route({
 
       const result = await UploadGateway.sendUploadFile(uploadFile)
 
-    
-
       return {
         message: 'Upload bem-sucedido!',
-        url: result.url ,
+        url: result.url,
         public_id: result.public_id,
       }
     } catch (error) {
