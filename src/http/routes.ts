@@ -7,6 +7,7 @@ import {
 import { authenticateController } from './controllers/authenticate-controller.js'
 import { profileController } from './controllers/profile-controller.js'
 import { resgisterController } from './controllers/register-controller.js'
+import { VerifyJWT } from './middlewares/verify-jwt.js'
 import { ErrorSchema } from './schemas/error-schema.js'
 import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
 
@@ -48,10 +49,10 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     method: 'GET',
+    onRequest: [VerifyJWT],
     schema: {
       security: [{ bearerAuth: [] }],
       tags: ['me'],
-      
     },
     url: '/me',
     handler: profileController,
