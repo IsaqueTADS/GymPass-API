@@ -1,3 +1,4 @@
+import fastifyJwt from '@fastify/jwt'
 import fastifyMultipart from '@fastify/multipart'
 import FastifySwagger from '@fastify/swagger'
 import FastifyApiReference from '@scalar/fastify-api-reference'
@@ -14,6 +15,7 @@ import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
 import { UploadClaudinaryGateway } from './gateways/claudinary/upload-claudinary-gateway.js'
 import { appRoutes } from './http/routes.js'
+import { handleSingleUpload } from './http/utils/upload-handler.js'
 
 const envToLogger = {
   dev: {
@@ -45,6 +47,15 @@ await app.register(FastifySwagger, {
         'A RESTful API built with Fastify for managing gym check-ins, users, and fitness locations. It provides secure authentication, location-based gym search, user registration, and check-in tracking. Designed with scalability and clean architecture principles to support modern fitness applications.',
       version: '0.1.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
     servers: [
       {
         url: env.API_URL,
@@ -65,6 +76,10 @@ await app.register(fastifyMultipart, {
   limits: {
     fileSize: 10 * 1024 * 1024,
   },
+})
+
+await app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
 })
 
 app.get(
@@ -115,7 +130,7 @@ app.setErrorHandler((error, _, reply) => {
     })
   }
 
-  return reply.status(500).send('Internal server error.')
+  return reply.status(500).send({ message: 'Internal server error.' })
 })
 
 app.route({
@@ -127,38 +142,22 @@ app.route({
     if (!data)
       return reply.status(400).send({ error: 'Nenhum arquivo enviado' })
 
-    // Define uma promessa para o upload do Cloudinary
-    // const uploadToCloudinary = () => {
-    //   return new Promise((resolve, reject) => {
-    //     // Criar stream de upload
-    //     const stream = cloudinary.uploader.upload_stream(
-    //       { folder: 'fastify_uploads' }, // Opcional: pasta no Cloudinary
-    //       (error, result) => {
-    //         if (result) resolve(result)
-    //         else reject(error)
-    //       },
-    //     )
-    //     // "Pipar" o arquivo recebido para o stream do Cloudinary
-    //     data.file.pipe(stream)
-    //   })
-    // }
-
     try {
+      const uploadFile = await handleSingleUpload(data)
+
+      console.log(uploadFile)
+
       const UploadGateway = new UploadClaudinaryGateway()
 
-      const result = await UploadGateway.sendUploadFile(data)
-
-      console.log(result)
-      console.log('olá')
+      const result = await UploadGateway.sendUploadFile(uploadFile)
 
       return {
         message: 'Upload bem-sucedido!',
-        url: result.url ,
+        url: result.url,
         public_id: result.public_id,
       }
     } catch (error) {
-      if(error instanceof UploadApiErrorResponse){
-
+      if (error instanceof UploadApiErrorResponse) {
       }
     }
   },

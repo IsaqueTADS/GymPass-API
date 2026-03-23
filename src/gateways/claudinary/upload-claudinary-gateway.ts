@@ -1,7 +1,7 @@
 import type { MultipartFile } from '@fastify/multipart'
 import { v2 as cloudinary, type UploadApiResponse } from 'cloudinary'
 import { env } from '@/env/index.js'
-import type { UploadGateway, UploadGatewayResponse } from '../upload-gateway.js'
+import type { UploadFileDTO, UploadGateway } from '../upload-gateway.js'
 
 export class UploadClaudinaryGateway implements UploadGateway {
   constructor() {
@@ -11,7 +11,7 @@ export class UploadClaudinaryGateway implements UploadGateway {
       api_secret: env.CLOUDINARY_SECRET,
     })
   }
-  async sendUploadFile(data: MultipartFile): Promise<UploadGatewayResponse> {
+  async sendUploadFile(data: UploadFileDTO) {
     const uploadToCloudinary = () => {
       return new Promise((resolve, rejects) => {
         const stream = cloudinary.uploader.upload_stream(

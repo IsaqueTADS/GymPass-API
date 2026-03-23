@@ -1,9 +1,15 @@
-import type { MultipartFile } from '@fastify/multipart'
+import type { Readable } from 'node:stream'
 
-export type UploadGatewayResponse = {
+export interface UploadFileDTO {
+  file: Readable
+  filename: string
+  mimetype: string
+  encoding: string
+}
+export interface UploadGatewayResponse {
   url: string
   public_id?: string
 }
 export interface UploadGateway {
-  sendUploadFile(data: MultipartFile): Promise<UploadGatewayResponse>
+  sendUploadFile(data: UploadFileDTO): Promise<UploadGatewayResponse>
 }

@@ -1,10 +1,66 @@
 import { randomUUID } from 'node:crypto'
+import dayjs from 'dayjs'
 import type { CheckIn } from '@/dtos/checkin/checkin.js'
 import type { CreateCheckInDTO } from '@/dtos/checkin/create-checkin.dto.js'
 import type { CheckInsRepository } from '../check-ins-repository.js'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public chekIns: CheckIn[] = []
+
+  async save(checkIn: CheckIn): Promise<CheckIn> {
+    const CheckInIndex = this.chekIns.findIndex(
+      (item) => item.id === checkIn.id,
+    )
+
+    if (CheckInIndex >= 0) {
+      this.chekIns[CheckInIndex] = checkIn
+    }
+
+    return checkIn
+  }
+
+  async findById(id: string): Promise<CheckIn | null> {
+    const checkIn = this.chekIns.find((item) => item.id === id)
+
+    if (!checkIn) {
+      return null
+    }
+
+    return checkIn
+  }
+
+  async countByUserId(userId: string): Promise<number> {
+    return this.chekIns.filter((checkIn) => checkIn.user_id === userId).length
+  }
+
+  async findManyByUserId(userId: string, page: number): Promise<CheckIn[]> {
+    const checkIns = this.chekIns.filter(
+      (checkIn) => checkIn.user_id === userId,
+    )
+
+    return checkIns.slice((page - 1) * 20, page * 20)
+    // 1 =  0  a 20
+    // 2 =  20 a 40
+    // 3 =  40 a 60
+  }
+
+  async findByUserIdOnDate(userId: string, date: Date) {
+    const startOfTheDay = dayjs(date).startOf('date')
+    const endOfTheDay = dayjs(date).endOf('date')
+
+    const checkIn = this.chekIns.find((checkIn) => {
+      const checkInDate = dayjs(checkIn.created_at)
+
+      const isOnSameData =
+        checkInDate.isAfter(startOfTheDay) && checkInDate.isBefore(endOfTheDay)
+
+      return checkIn.user_id === userId && isOnSameData
+    })
+
+    if (!checkIn) return null
+
+    return checkIn
+  }
 
   async create(data: CreateCheckInDTO): Promise<CheckIn> {
     const checkIn = {
