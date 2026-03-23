@@ -1,4 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { FailedUploadError } from '@/use-cases/errors/failed-upload-error.js'
 import { makeUpdateUserAvatar } from '@/use-cases/factories/make-update-user-avatar-use-case.js'
 import { handleSingleUpload } from '../utils/upload-handler.js'
 
@@ -18,9 +19,11 @@ export async function uploadUserAvatarController(
     })
 
     reply.status(201).send({ ...result.user, password_hash: undefined })
-
-    return
   } catch (err) {
-    console.log(err)
+    if (err instanceof FailedUploadError) {
+      reply.status(400).send({ message: err.message })
+    }
+
+    reply.status(500).send()
   }
 }
