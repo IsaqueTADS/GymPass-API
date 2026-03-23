@@ -7,6 +7,7 @@ import {
 import { authenticateController } from './controllers/authenticate-controller.js'
 import { profileController } from './controllers/profile-controller.js'
 import { resgisterController } from './controllers/register-controller.js'
+import { uploadUserAvatarController } from './controllers/upload-user-avatar-controller.js'
 import { VerifyJWT } from './middlewares/verify-jwt.js'
 import { ErrorSchema } from './schemas/error-schema.js'
 import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
@@ -52,9 +53,24 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
     onRequest: [VerifyJWT],
     schema: {
       security: [{ bearerAuth: [] }],
+      summary: 'Get user profile',
       tags: ['me'],
     },
     url: '/me',
     handler: profileController,
+  })
+
+  app.route({
+    method: 'patch',
+    onRequest: [VerifyJWT],
+    schema: {
+      security: [{ bearerAuth: [] }],
+      tags: ['me'],
+      summary: 'Update user avatar',
+      description: 'Essa rota espera apenas um arquivo em multipart/form-data ',
+      consumes: ['multipart/form-data'],
+    },
+    url: '/uploads',
+    handler: uploadUserAvatarController,
   })
 }

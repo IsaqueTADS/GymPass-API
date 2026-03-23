@@ -133,32 +133,3 @@ app.setErrorHandler((error, _, reply) => {
   return reply.status(500).send({ message: 'Internal server error.' })
 })
 
-app.route({
-  method: 'patch',
-  url: '/uploads',
-  handler: async (request, reply) => {
-    const data = await request.file()
-
-    if (!data)
-      return reply.status(400).send({ error: 'Nenhum arquivo enviado' })
-
-    try {
-      const uploadFile = await handleSingleUpload(data)
-
-      console.log(uploadFile)
-
-      const UploadGateway = new UploadClaudinaryGateway()
-
-      const result = await UploadGateway.sendUploadFile(uploadFile)
-
-      return {
-        message: 'Upload bem-sucedido!',
-        url: result.url,
-        public_id: result.public_id,
-      }
-    } catch (error) {
-      if (error instanceof UploadApiErrorResponse) {
-      }
-    }
-  },
-})
