@@ -2,6 +2,7 @@ import type { Readable } from 'node:stream'
 import type { User } from '@/dtos/user/user.js'
 import type { UploadGateway } from '@/gateways/upload-gateway.js'
 import type { usersRepository } from '@/repositories/users-repository.js'
+import { FailedUploadError } from './errors/failed-upload-error.js'
 
 interface UploadDataDTO {
   file: Readable
@@ -35,7 +36,7 @@ export class UpadateUserAvatarUseCase {
       const user = await this.userRepository.updateAvatar(userId, url)
       return { user, publicId: public_id ?? '' }
     } catch {
-      throw Error('')
+      throw new FailedUploadError()
     }
   }
 }
