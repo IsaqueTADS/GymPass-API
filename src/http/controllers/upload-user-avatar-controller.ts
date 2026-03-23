@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { FailedUploadError } from '@/use-cases/errors/failed-upload-error.js'
+import { InvalidFileTypeError } from '@/use-cases/errors/Invalid-file-type-error.js'
 import { makeUpdateUserAvatar } from '@/use-cases/factories/make-update-user-avatar-use-case.js'
 import { handleSingleUpload } from '../utils/upload-handler.js'
 
@@ -18,12 +19,15 @@ export async function uploadUserAvatarController(
       data: fileUpload,
     })
 
-    reply.status(201).send({ ...result.user, password_hash: undefined })
+    return reply.status(201).send({ ...result.user, password_hash: undefined })
   } catch (err) {
     if (err instanceof FailedUploadError) {
-      reply.status(400).send({ message: err.message })
+      return reply.status(400).send({ message: err.message })
+    }
+    if (err instanceof InvalidFileTypeError) {
+      return reply.status(415).send({ message: err.message })
     }
 
-    reply.status(500).send()
+    throw err
   }
 }
