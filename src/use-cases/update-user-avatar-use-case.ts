@@ -43,7 +43,8 @@ export class UpadateUserAvatarUseCase {
       const user = await this.userRepository.updateAvatar(userId, url)
 
       return { user, publicId: public_id ?? '' }
-    } catch {
+    } catch(err) {
+      console.log(err)
       throw new FailedUploadError()
     }
   }
