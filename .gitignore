@@ -152,5 +152,6 @@ codigoai2.ts
 
 # Implementation plans
 UPLOAD-IMPLEMENTATION-PLAN.md
+PRISMA-TEST-ENVIRONMENT.md
 
 /src/generated/prisma

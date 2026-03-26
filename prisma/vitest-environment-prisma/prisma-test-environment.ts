@@ -2,17 +2,14 @@ import 'dotenv/config'
 
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
+import { PrismaPg } from '@prisma/adapter-pg'
 import type { Environment } from 'vitest/runtime'
-
-import { prisma } from '@/lib/prisma.js'
+import { PrismaClient } from '@/generated/prisma/client.js'
 
 function generateDatabaseURL(schema: string) {
-
-  if(!process.env.DATABASE_URL){
-    throw new Error("A variavel DABASE_URL precisa está definada em .env")
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not found')
   }
-
-
 
   const url = new URL(process.env.DATABASE_URL)
   url.searchParams.set('schema', schema)
@@ -24,24 +21,23 @@ export default (<Environment>{
   viteEnvironment: 'ssr',
 
   async setup() {
-    // custom setup
     const schema = randomUUID()
     const databaseUrl = generateDatabaseURL(schema)
 
-    console.log(databaseUrl)
-
     process.env.DATABASE_URL = databaseUrl
-
+   
     execSync('npm run db:migrate:deploy')
 
     return {
       async teardown() {
-        // called after all tests with this env have been run
-        await prisma.$executeRawUnsafe(`
-          DROP SCHEMA IF EXISTS "${schema}"
-        `)
+        console.log('[TestEnv] Dropping schema:', schema)
+        const cleanupAdapter = new PrismaPg({ connectionString: databaseUrl })
+        const cleanupPrisma = new PrismaClient({ adapter: cleanupAdapter })
 
-        await prisma.$disconnect()
+        await cleanupPrisma.$executeRawUnsafe(
+          `DROP SCHEMA IF EXISTS "${schema}" CASCADE`,
+        )
+        await cleanupPrisma.$disconnect()
       },
     }
   },
