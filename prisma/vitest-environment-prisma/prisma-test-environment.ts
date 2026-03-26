@@ -2,9 +2,8 @@ import 'dotenv/config'
 
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
-import { PrismaPg } from '@prisma/adapter-pg'
 import type { Environment } from 'vitest/runtime'
-import { PrismaClient } from '@/generated/prisma/client.js'
+import { prisma } from '@/lib/prisma.js'
 
 function generateDatabaseURL(schema: string) {
   if (!process.env.DATABASE_URL) {
@@ -31,13 +30,12 @@ export default (<Environment>{
     return {
       async teardown() {
         console.log('[TestEnv] Dropping schema:', schema)
-        const cleanupAdapter = new PrismaPg({ connectionString: databaseUrl })
-        const cleanupPrisma = new PrismaClient({ adapter: cleanupAdapter })
+        
 
-        await cleanupPrisma.$executeRawUnsafe(
+        await prisma.$executeRawUnsafe(
           `DROP SCHEMA IF EXISTS "${schema}" CASCADE`,
         )
-        await cleanupPrisma.$disconnect()
+        await prisma.$disconnect()
       },
     }
   },
