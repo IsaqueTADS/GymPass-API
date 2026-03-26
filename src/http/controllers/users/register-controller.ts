@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { RegisterBodySchema } from '@/http/schemas/auth-schema.js'
 import { makeRegisterUseCase } from '@/use-cases/factories/make-register-use-case.js'
-import { UserAlreadyExistsError } from '../../use-cases/errors/user-already-exist-error.js'
+import { UserAlreadyExistsError } from '../../../use-cases/errors/user-already-exist-error.js'
 
 export async function resgisterController(
   request: FastifyRequest,

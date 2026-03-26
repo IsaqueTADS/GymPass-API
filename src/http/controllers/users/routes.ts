@@ -4,15 +4,15 @@ import {
   AuthenticateBodySchema,
   RegisterBodySchema,
 } from '@/http/schemas/auth-schema.js'
-import { authenticateController } from './controllers/authenticate-controller.js'
-import { profileController } from './controllers/profile-controller.js'
-import { resgisterController } from './controllers/register-controller.js'
-import { uploadUserAvatarController } from './controllers/upload-user-avatar-controller.js'
-import { VerifyJWT } from './middlewares/verify-jwt.js'
-import { ErrorSchema } from './schemas/error-schema.js'
-import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
+import { VerifyJWT } from '../../middlewares/verify-jwt.js'
+import { ErrorSchema } from '../../schemas/error-schema.js'
+import { ValidationErrorSchema } from '../../schemas/validation-error-schema.js'
+import { authenticateController } from './authenticate-controller.js'
+import { profileController } from './profile-controller.js'
+import { resgisterController } from './register-controller.js'
+import { uploadUserAvatarController } from './upload-user-avatar-controller.js'
 
-export const appRoutes: FastifyPluginAsyncZod = async (app) => {
+export const usersRoutes: FastifyPluginAsyncZod = async (app) => {
   app.route({
     method: 'POST',
     url: '/users',

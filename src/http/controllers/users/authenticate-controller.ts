@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { AuthenticateBodySchema } from '@/http/schemas/auth-schema.js'
 import { makeAuthenticateUseCase } from '@/use-cases/factories/make-authenticate-use-case.js'
-import { InvalidCredentialsError } from '../../use-cases/errors/invalid-credentials-error.js'
+import { InvalidCredentialsError } from '../../../use-cases/errors/invalid-credentials-error.js'
 
 export async function authenticateController(
   request: FastifyRequest,

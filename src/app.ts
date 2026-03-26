@@ -13,9 +13,7 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
-
-import { InMemoryUploadGateway } from './gateways/in-memory/in-memory-upload-gateway.js'
-import { appRoutes } from './http/routes.js'
+import { usersRoutes } from './http/controllers/users/routes.js'
 
 const envToLogger = {
   dev: {
@@ -100,7 +98,7 @@ app.get(
   },
 )
 
-app.register(appRoutes)
+app.register(usersRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {
