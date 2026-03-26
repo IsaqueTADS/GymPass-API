@@ -13,10 +13,9 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
-import { UploadClaudinaryGateway } from './gateways/claudinary/upload-claudinary-gateway.js'
+
 import { InMemoryUploadGateway } from './gateways/in-memory/in-memory-upload-gateway.js'
 import { appRoutes } from './http/routes.js'
-import { handleSingleUpload } from './http/utils/upload-handler.js'
 
 const envToLogger = {
   dev: {
@@ -96,8 +95,6 @@ app.get(
   },
   (request, reply) => {
     request.log.info('Some info about the current request')
-
-    new InMemoryUploadGateway().sendUploadFile()
 
     reply.status(200).send({ hello: 'world' })
   },
