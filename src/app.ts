@@ -13,6 +13,7 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
+import { gymsRoutes } from './http/controllers/gyms/routes.js'
 import { usersRoutes } from './http/controllers/users/routes.js'
 
 const envToLogger = {
@@ -99,6 +100,7 @@ app.get(
 )
 
 app.register(usersRoutes)
+app.register(gymsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {
