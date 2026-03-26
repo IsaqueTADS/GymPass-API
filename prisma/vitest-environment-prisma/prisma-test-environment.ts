@@ -1,11 +1,20 @@
+import 'dotenv/config'
+
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import type { Environment } from 'vitest/runtime'
-import { env } from '@/env/index.js'
+
 import { prisma } from '@/lib/prisma.js'
 
 function generateDatabaseURL(schema: string) {
-  const url = new URL(env.DATABASE_URL)
+
+  if(!process.env.DATABASE_URL){
+    throw new Error("A variavel DABASE_URL precisa está definada em .env")
+  }
+
+
+
+  const url = new URL(process.env.DATABASE_URL)
   url.searchParams.set('schema', schema)
   return url.toString()
 }
@@ -21,7 +30,7 @@ export default (<Environment>{
 
     console.log(databaseUrl)
 
-    env.DATABASE_URL = databaseUrl
+    process.env.DATABASE_URL = databaseUrl
 
     execSync('npm run db:migrate:deploy')
 
