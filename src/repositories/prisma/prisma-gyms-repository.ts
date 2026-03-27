@@ -1,3 +1,4 @@
+import { Decimal } from '@prisma/client/runtime/client'
 import type { CreateGymDTO } from '@/dtos/gyms/create-gym.dto.js'
 import type { Gym } from '@/dtos/gyms/gym.js'
 import type { Prisma } from '@/generated/prisma/client.js'
@@ -22,16 +23,21 @@ export class PrismaGymsRepository implements GymsRepository {
 
     return gyms.map((gym) => this.mapToGym(gym))
   }
+
   async findManyGymsNearBy({ latitude, longitude }: FindManyGymsNearByParams) {
+    const latitudeDecimal = new Decimal(latitude)
+    const longitudeDecimal = new Decimal(longitude)
+    
     const gyms = await prisma.$queryRaw<Prisma.GymModel[]>`
     SELECT * FROM gyms
-    WHERE ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) 
-    * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) )
+    WHERE ( 6371 * acos( cos( radians(${latitudeDecimal}) ) * cos( radians( latitude ) ) 
+    * cos( radians( longitude ) - radians(${longitudeDecimal}) ) + sin( radians(${latitudeDecimal}) )
     * sin( radians( latitude ) ) ) ) <= 10
     `
 
     return gyms.map((gym) => this.mapToGym(gym))
   }
+
   async findById(id: string) {
     const gym = await prisma.gym.findFirst({
       where: {
@@ -45,6 +51,7 @@ export class PrismaGymsRepository implements GymsRepository {
 
     return this.mapToGym(gym)
   }
+
   async create(data: CreateGymDTO) {
     const gym = await prisma.gym.create({ data })
 

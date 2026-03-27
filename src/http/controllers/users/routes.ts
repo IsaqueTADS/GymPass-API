@@ -3,16 +3,18 @@ import z from 'zod'
 import {
   AuthenticateBodySchema,
   RegisterBodySchema,
+  UserResponseSchema,
 } from '@/http/schemas/auth-schema.js'
-import { authenticateController } from './controllers/authenticate-controller.js'
-import { profileController } from './controllers/profile-controller.js'
-import { resgisterController } from './controllers/register-controller.js'
-import { uploadUserAvatarController } from './controllers/upload-user-avatar-controller.js'
-import { VerifyJWT } from './middlewares/verify-jwt.js'
-import { ErrorSchema } from './schemas/error-schema.js'
-import { ValidationErrorSchema } from './schemas/validation-error-schema.js'
+import { VerifyJWT } from '../../middlewares/verify-jwt.js'
+import { ErrorSchema } from '../../schemas/error-schema.js'
+import { ValidationErrorSchema } from '../../schemas/validation-error-schema.js'
+import { authenticateController } from './authenticate-controller.js'
+import { profileController } from './profile-controller.js'
+import { refreshController } from './refresh-controller.js'
+import { resgisterController } from './register-controller.js'
+import { uploadUserAvatarController } from './upload-user-avatar-controller.js'
 
-export const appRoutes: FastifyPluginAsyncZod = async (app) => {
+export const usersRoutes: FastifyPluginAsyncZod = async (app) => {
   app.route({
     method: 'POST',
     url: '/users',
@@ -46,6 +48,17 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
     handler: authenticateController,
   })
 
+  app.route({
+    method: 'patch',
+    onRequest: [VerifyJWT],
+    schema: {
+      tags: ['Auth'],
+      summary: 'refresh token',
+    },
+    url: '/token/refresh',
+    handler: refreshController,
+  })
+
   /*Auth*/
 
   app.route({
@@ -55,6 +68,9 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       summary: 'Get user profile',
       tags: ['me'],
+      response: {
+        200: UserResponseSchema,
+      },
     },
     url: '/me',
     handler: profileController,
@@ -69,6 +85,9 @@ export const appRoutes: FastifyPluginAsyncZod = async (app) => {
       summary: 'Update user avatar',
       description: 'Essa rota espera apenas um arquivo em multipart/form-data ',
       consumes: ['multipart/form-data'],
+      response: {
+        201: UserResponseSchema,
+      },
     },
     url: '/uploads',
     handler: uploadUserAvatarController,

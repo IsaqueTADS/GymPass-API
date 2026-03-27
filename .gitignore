@@ -77,6 +77,7 @@ tsbuildinfo/
 
 # dotenv environment variables file
 .env
+.env.test
 .env.local
 .env.development.local
 .env.test.local
@@ -152,5 +153,6 @@ codigoai2.ts
 
 # Implementation plans
 UPLOAD-IMPLEMENTATION-PLAN.md
+PRISMA-TEST-ENVIRONMENT.md
 
 /src/generated/prisma

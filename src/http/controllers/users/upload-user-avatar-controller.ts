@@ -2,7 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { FailedUploadError } from '@/use-cases/errors/failed-upload-error.js'
 import { InvalidFileTypeError } from '@/use-cases/errors/Invalid-file-type-error.js'
 import { makeUpdateUserAvatar } from '@/use-cases/factories/make-update-user-avatar-use-case.js'
-import { handleSingleUpload } from '../utils/upload-handler.js'
+import { handleSingleUpload } from '../../utils/upload-handler.js'
 
 export async function uploadUserAvatarController(
   request: FastifyRequest,
