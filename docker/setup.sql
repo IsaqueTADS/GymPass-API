@@ -1,0 +1,1 @@
+CREATE DATABASE gympass_test;

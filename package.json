@@ -6,15 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node build/server.cjs",
-    "dev": "tsx --watch src/server.ts",
+    "dev": "tsx --env-file .env --watch src/server.ts",
     "build": "tsup src --out-dir build",
-    "test": "vitest run --project unit",
-    "test:e2e": "vitest run --project e2e",
-    "test:watch": "vitest --project unit",
-    "test:e2e:watch": "vitest --project e2e",
-    "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui",
-    "test:all": "vitest run --project e2e --project unit",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
@@ -22,7 +15,16 @@
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "db:status": "prisma migrate status"
+    "db:status": "prisma migrate status",
+    
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
+
+    "test:e2e": "dotenv -e .env.test -- vitest run --project e2e",
+    "test:e2e:watch": "dotenv -e .env.test -- vitest --project e2e",
+
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage",
+    "test:ui": "dotenv -e .env.test -- vitest --ui"
   },
   "engines": {
     "node": "24.x"
@@ -41,6 +43,7 @@
     "cloudinary": "2.9.0",
     "dayjs": "1.11.20",
     "dotenv": "17.3.1",
+    "dotenv-cli": "11.0.0",
     "fastify": "5.8.2",
     "fastify-type-provider-zod": "6.1.0",
     "pg": "8.20.0",
