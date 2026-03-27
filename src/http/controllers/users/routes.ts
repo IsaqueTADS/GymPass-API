@@ -10,6 +10,7 @@ import { ErrorSchema } from '../../schemas/error-schema.js'
 import { ValidationErrorSchema } from '../../schemas/validation-error-schema.js'
 import { authenticateController } from './authenticate-controller.js'
 import { profileController } from './profile-controller.js'
+import { refreshController } from './refresh-controller.js'
 import { resgisterController } from './register-controller.js'
 import { uploadUserAvatarController } from './upload-user-avatar-controller.js'
 
@@ -45,6 +46,17 @@ export const usersRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     handler: authenticateController,
+  })
+
+  app.route({
+    method: 'patch',
+    onRequest: [VerifyJWT],
+    schema: {
+      tags: ['Auth'],
+      summary: 'refresh token',
+    },
+    url: '/token/refresh',
+    handler: refreshController,
   })
 
   /*Auth*/
