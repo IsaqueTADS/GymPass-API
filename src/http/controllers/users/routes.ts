@@ -3,6 +3,7 @@ import z from 'zod'
 import {
   AuthenticateBodySchema,
   RegisterBodySchema,
+  UserResponseSchema,
 } from '@/http/schemas/auth-schema.js'
 import { VerifyJWT } from '../../middlewares/verify-jwt.js'
 import { ErrorSchema } from '../../schemas/error-schema.js'
@@ -55,6 +56,9 @@ export const usersRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       summary: 'Get user profile',
       tags: ['me'],
+      response: {
+        200: UserResponseSchema,
+      },
     },
     url: '/me',
     handler: profileController,
@@ -69,6 +73,9 @@ export const usersRoutes: FastifyPluginAsyncZod = async (app) => {
       summary: 'Update user avatar',
       description: 'Essa rota espera apenas um arquivo em multipart/form-data ',
       consumes: ['multipart/form-data'],
+      response: {
+        201: UserResponseSchema,
+      },
     },
     url: '/uploads',
     handler: uploadUserAvatarController,

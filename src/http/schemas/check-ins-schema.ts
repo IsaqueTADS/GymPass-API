@@ -19,11 +19,10 @@ export const CreateCheckInBodySchema = z.object({
 })
 export const CreateCheckInParamsSchema = z.object({
   gymId: z.uuid('ID da academia inválido'),
- 
 })
 
 export const ValidateCheckInParamsSchema = z.object({
-  checkInId: z.uuid('ID do check-in inválido'),
+  checkInId: z.string().uuid('ID do check-in inválido'),
 })
 
 export const FetchUserCheckInsHistoryQuerySchema = z.object({

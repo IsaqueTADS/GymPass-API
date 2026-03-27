@@ -3,6 +3,7 @@ import {
   CheckInResponseSchema,
   CheckInsResponseSchema,
   CreateCheckInBodySchema,
+  CreateCheckInParamsSchema,
   FetchUserCheckInsHistoryQuerySchema,
   UserMetricsResponseSchema,
   ValidateCheckInParamsSchema,
@@ -22,6 +23,7 @@ export const checkInsRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       tags: ['check-ins'],
       summary: 'create checkin',
+      params: CreateCheckInParamsSchema,
       body: CreateCheckInBodySchema,
       response: {
         201: CheckInResponseSchema,

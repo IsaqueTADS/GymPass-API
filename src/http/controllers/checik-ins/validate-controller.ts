@@ -6,7 +6,7 @@ export async function validateController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const { checkInId } = ValidateCheckInParamsSchema.parse(request.body)
+  const { checkInId } = ValidateCheckInParamsSchema.parse(request.params)
 
   const validateCheckInUseCase = makeValidateCheckInUseCase()
 
