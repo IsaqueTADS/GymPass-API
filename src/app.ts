@@ -13,6 +13,7 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
+import { checkInsRoutes } from './http/controllers/checik-ins/routes.js'
 import { gymsRoutes } from './http/controllers/gyms/routes.js'
 import { usersRoutes } from './http/controllers/users/routes.js'
 
@@ -101,6 +102,7 @@ app.get(
 
 app.register(usersRoutes)
 app.register(gymsRoutes)
+app.register(checkInsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {

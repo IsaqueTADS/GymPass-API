@@ -8,7 +8,7 @@ export async function nearbyController(
   reply: FastifyReply,
 ) {
   const { userLatitude, userLongitude } = FetchNearbyGymsQuerySchema.parse(
-    request.params,
+    request.query,
   )
 
   const FetchNearbyGymsUseCase = makeFetchNearbyGymsUseCase()

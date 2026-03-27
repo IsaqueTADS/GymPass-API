@@ -8,7 +8,7 @@ export async function searchController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const { query, page } = SearchGymsQuerySchema.parse(request.params)
+  const { query, page } = SearchGymsQuerySchema.parse(request.query)
 
   const searchGymsUseCase = makeSearchGymsUseCase()
 

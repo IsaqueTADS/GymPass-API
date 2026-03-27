@@ -39,7 +39,7 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       tags: ['gyms'],
       summary: 'search gyms',
-      params: SearchGymsQuerySchema,
+     querystring: SearchGymsQuerySchema,
       response: {
         200: SearchGymsResponseSchema,
       },
@@ -54,7 +54,7 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       tags: ['gyms'],
       summary: 'get nearby',
-      params: FetchNearbyGymsQuerySchema,
+      querystring: FetchNearbyGymsQuerySchema,
       response: {
         200: FetchNearbyGymsResponseSchema,
       },
