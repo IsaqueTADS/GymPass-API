@@ -3,7 +3,8 @@ import z from 'zod'
 export const User = z.object({
   id: z.uuid(),
   name: z.string(),
-  email: z.string().email(),
+  image_url: z.string().nullable(),
+  email: z.email(),
   created_at: z.date(),
 })
 

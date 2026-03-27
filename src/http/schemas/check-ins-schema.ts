@@ -9,7 +9,6 @@ export const CheckIn = z.object({
 })
 
 export const CreateCheckInBodySchema = z.object({
-  gymId: z.uuid('ID da academia inválido'),
   userLatitude: z.coerce.number().refine((value) => Math.abs(value) <= 90, {
     message: 'Latitude inválida',
   }),

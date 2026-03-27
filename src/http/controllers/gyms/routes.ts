@@ -26,7 +26,7 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
       summary: 'create gyms',
       body: CreateGymsBodySchema,
       response: {
-        200: GymsResponseSchema,
+        201: GymsResponseSchema,
       },
     },
     handler: createController,
