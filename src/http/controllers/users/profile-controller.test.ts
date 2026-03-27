@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '@/app.js'
+import { createAndAuthenticateUser } from '@/http/utils/test/create-and-authenticate-user.js'
 
 describe('Profile Controller (e2e)', async () => {
   beforeAll(async () => {
@@ -11,20 +12,11 @@ describe('Profile Controller (e2e)', async () => {
   })
 
   it('Deve ser possivel obter o perfil de um usuário logado', async () => {
-    await request(app.server).post('/users').send({
-      name: 'Isaque',
-      email: 'isaque4@teste.com',
-      password: '12345678',
-    })
-
-    const { body } = await request(app.server).post('/sessions').send({
-      email: 'isaque4@teste.com',
-      password: '12345678',
-    })
+    const { token } = await createAndAuthenticateUser(app)
 
     const response = await request(app.server)
       .get('/me')
-      .set('Authorization', `Bearer ${body.token}`)
+      .set('Authorization', `Bearer ${token}`)
       .send()
 
     expect(response.statusCode).toEqual(200)
