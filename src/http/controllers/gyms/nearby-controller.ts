@@ -13,6 +13,7 @@ export async function nearbyController(
 
   const FetchNearbyGymsUseCase = makeFetchNearbyGymsUseCase()
 
+
   const { gyms } = await FetchNearbyGymsUseCase.execute({
     userLatitude,
     userLongitude,
