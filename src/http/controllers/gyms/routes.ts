@@ -1,5 +1,5 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
-
+import { VerifyUserRole } from '@/http/middlewares/verify-user-role.js'
 import {
   CreateGymsBodySchema,
   FetchNearbyGymsQuerySchema,
@@ -8,7 +8,6 @@ import {
   SearchGymsQuerySchema,
   SearchGymsResponseSchema,
 } from '@/http/schemas/gyms-schema.js'
-
 import { VerifyJWT } from '../../middlewares/verify-jwt.js'
 import { createController } from './create-controller.js'
 import { nearbyController } from './nearby-controller.js'
@@ -20,6 +19,7 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
   app.route({
     method: 'POST',
     url: '/gyms',
+    onRequest: [VerifyUserRole('ADMIN')],
     schema: {
       security: [{ bearerAuth: [] }],
       tags: ['gyms'],
@@ -39,7 +39,7 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
       security: [{ bearerAuth: [] }],
       tags: ['gyms'],
       summary: 'search gyms',
-     querystring: SearchGymsQuerySchema,
+      querystring: SearchGymsQuerySchema,
       response: {
         200: SearchGymsResponseSchema,
       },
