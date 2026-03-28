@@ -29,8 +29,6 @@ describe('Profile Controller (e2e)', async () => {
       .send(gymData)
 
     expect(response.statusCode).toEqual(201)
-    expect(response.body.gym).toEqual(
-      expect.objectContaining(gymData),
-    )
+    expect(response.body.gym).toEqual(expect.objectContaining(gymData))
   })
 })

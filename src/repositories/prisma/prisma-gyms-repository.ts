@@ -27,7 +27,7 @@ export class PrismaGymsRepository implements GymsRepository {
   async findManyGymsNearBy({ latitude, longitude }: FindManyGymsNearByParams) {
     const latitudeDecimal = new Decimal(latitude)
     const longitudeDecimal = new Decimal(longitude)
-    
+
     const gyms = await prisma.$queryRaw<Prisma.GymModel[]>`
     SELECT * FROM gyms
     WHERE ( 6371 * acos( cos( radians(${latitudeDecimal}) ) * cos( radians( latitude ) ) 

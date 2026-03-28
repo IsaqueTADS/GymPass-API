@@ -3,7 +3,9 @@ import { FetchUserCheckInsHistoryUseCase } from '../fetch-user-check-ins-history
 
 export function makeFetchUserCheckInsHistoryUseCase() {
   const checkInsRepository = new PrismaCheckInsRepository()
-  const fetchUserCheckInsHistoryUseCase = new FetchUserCheckInsHistoryUseCase(checkInsRepository)
+  const fetchUserCheckInsHistoryUseCase = new FetchUserCheckInsHistoryUseCase(
+    checkInsRepository,
+  )
 
   return fetchUserCheckInsHistoryUseCase
 }
