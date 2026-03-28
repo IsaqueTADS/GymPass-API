@@ -1,9 +1,12 @@
 services:
   gympass-api:
     image: bitnami/postgresql
-    ports:
-      - 5432:5432
     environment:
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
       - POSTGRESQL_DATABASE=gympass
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/setup.sql:/docker-entrypoint-initdb.d/init.sql
+      

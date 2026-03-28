@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie'
 import fastifyJwt from '@fastify/jwt'
 import fastifyMultipart from '@fastify/multipart'
 import FastifySwagger from '@fastify/swagger'
@@ -13,9 +14,9 @@ import {
 } from 'fastify-type-provider-zod'
 import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
-import { UploadClaudinaryGateway } from './gateways/claudinary/upload-claudinary-gateway.js'
-import { appRoutes } from './http/routes.js'
-import { handleSingleUpload } from './http/utils/upload-handler.js'
+import { checkInsRoutes } from './http/controllers/checik-ins/routes.js'
+import { gymsRoutes } from './http/controllers/gyms/routes.js'
+import { usersRoutes } from './http/controllers/users/routes.js'
 
 const envToLogger = {
   dev: {
@@ -78,8 +79,17 @@ await app.register(fastifyMultipart, {
   },
 })
 
+await app.register(fastifyCookie, {})
+
 await app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
+  sign: {
+    expiresIn: '10m',
+  },
 })
 
 app.get(
@@ -95,11 +105,14 @@ app.get(
   },
   (request, reply) => {
     request.log.info('Some info about the current request')
+
     reply.status(200).send({ hello: 'world' })
   },
 )
 
-app.register(appRoutes)
+app.register(usersRoutes)
+app.register(gymsRoutes)
+app.register(checkInsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (env.NODE_ENV !== 'production') {
@@ -131,34 +144,4 @@ app.setErrorHandler((error, _, reply) => {
   }
 
   return reply.status(500).send({ message: 'Internal server error.' })
-})
-
-app.route({
-  method: 'patch',
-  url: '/uploads',
-  handler: async (request, reply) => {
-    const data = await request.file()
-
-    if (!data)
-      return reply.status(400).send({ error: 'Nenhum arquivo enviado' })
-
-    try {
-      const uploadFile = await handleSingleUpload(data)
-
-      console.log(uploadFile)
-
-      const UploadGateway = new UploadClaudinaryGateway()
-
-      const result = await UploadGateway.sendUploadFile(uploadFile)
-
-      return {
-        message: 'Upload bem-sucedido!',
-        url: result.url,
-        public_id: result.public_id,
-      }
-    } catch (error) {
-      if (error instanceof UploadApiErrorResponse) {
-      }
-    }
-  },
 })

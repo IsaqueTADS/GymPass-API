@@ -6,6 +6,21 @@ import type { usersRepository } from '../users-repository.js'
 export class InMemoryUsersRepository implements usersRepository {
   public items: User[] = []
 
+  async updateAvatar(id: string, imageUrl: string): Promise<User> {
+    const userIndex = this.items.findIndex((item) => item.id === id)
+
+    const user = this.items[userIndex]
+
+    const updatedUser = {
+      ...user,
+      image_url: imageUrl,
+    }
+
+    this.items[userIndex] = updatedUser
+
+    return updatedUser
+  }
+
   async findById(id: string) {
     const user = this.items.find((item) => item.id === id)
 

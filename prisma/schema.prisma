@@ -11,7 +11,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -19,6 +18,7 @@ model User {
   name          String
   email         String   @unique
   image_url     String?
+  role          Role     @default(MEMBER)
   password_hash String
   created_at    DateTime @default(now())
 
@@ -52,4 +52,9 @@ model Gym {
   checkIn CheckIn[]
 
   @@map("gyms")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
 }
