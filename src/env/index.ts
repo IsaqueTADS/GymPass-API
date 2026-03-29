@@ -11,6 +11,7 @@ const envSchema = z.object({
   CLOUDINARY_SECRET: z.string(),
   CLOUDINARY_NAME: z.string(),
   JWT_SECRET: z.string(),
+  FRONTEND_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

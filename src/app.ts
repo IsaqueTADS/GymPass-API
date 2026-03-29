@@ -9,6 +9,7 @@ import { checkInsRoutes } from './http/controllers/checik-ins/routes.js'
 import { gymsRoutes } from './http/controllers/gyms/routes.js'
 import { usersRoutes } from './http/controllers/users/routes.js'
 import { cookiePlugin } from './http/plugins/cookie.js'
+import { corsPlugin } from './http/plugins/cors.js'
 import { errorHandlerPlugin } from './http/plugins/error-handler.js'
 import { jwtPlugin } from './http/plugins/jwt.js'
 import { multipartPlugin } from './http/plugins/multipart.js'
@@ -40,6 +41,7 @@ await app.register(multipartPlugin)
 await app.register(cookiePlugin)
 await app.register(jwtPlugin)
 await app.register(errorHandlerPlugin)
+await app.register(corsPlugin)
 
 app.register(usersRoutes)
 app.register(gymsRoutes)
