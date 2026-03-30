@@ -17,6 +17,7 @@ describe('Register Controller (e2e)', async () => {
       password: '12345678',
     })
 
+    console.log('Response:', response.statusCode, response.body)
     expect(response.statusCode).toEqual(201)
   })
 })

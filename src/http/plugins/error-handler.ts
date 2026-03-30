@@ -10,9 +10,8 @@ import { env } from '@/env/index.js'
 export const errorHandlerPlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.setErrorHandler((error, _, reply) => {
-      if (env.NODE_ENV !== 'production') {
-        fastify.log.error(error)
-      }
+      console.error('Error handler:', error)
+      fastify.log.error(error)
 
       if (error instanceof ZodError) {
         return reply.status(400).send({
