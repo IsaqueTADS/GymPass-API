@@ -24,7 +24,7 @@ describe('Profile Controller (e2e)', async () => {
       user: expect.objectContaining({
         id: expect.any(String),
         name: 'Isaque',
-        email: 'isaque4@teste.com',
+        email: 'isaque@gmail.com',
       }),
     })
   })

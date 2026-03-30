@@ -12,7 +12,7 @@ describe('Profile Controller (e2e)', async () => {
     await app.close()
   })
 
-  it('Deve ser possivel o usuário validar check-in de um usuário', async () => {
+  it('Deve ser possivel validar check-in de um usuário', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
     const user = await prisma.user.findFirstOrThrow()
@@ -34,12 +34,15 @@ describe('Profile Controller (e2e)', async () => {
       },
     })
 
+
     const response = await request(app.server)
       .patch(`/check-ins/${checkIn.id}/validate`)
       .set('Authorization', `Bearer ${token}`)
-      .send()
-
+      .send({})
     expect(response.statusCode).toEqual(200)
-    //fazer novo expect para resposta
+    expect(response.body.checkIn).toEqual(expect.objectContaining({
+      user_id: user.id,
+      gym_id: gym.id,
+    }))
   })
 })

@@ -22,6 +22,7 @@ export class ValidateCheckInUseCase {
   }: ValidateCheckInUseCaseRequest): Promise<ValidateCheckInUseCaseResponse> {
     const checkIn = await this.checkInsRepository.findById(checkId)
 
+
     if (!checkIn) {
       throw new ResourceNotFoundError()
     }
