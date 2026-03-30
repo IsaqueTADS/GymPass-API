@@ -39,11 +39,10 @@ describe('Profile Controller (e2e)', async () => {
       .patch(`/check-ins/${checkIn.id}/validate`)
       .set('Authorization', `Bearer ${token}`)
       .send({})
-
-    
-
-    
     expect(response.statusCode).toEqual(200)
-    //fazer novo expect para resposta
+    expect(response.body.checkIn).toEqual(expect.objectContaining({
+      user_id: user.id,
+      gym_id: gym.id,
+    }))
   })
 })

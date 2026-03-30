@@ -10,8 +10,6 @@ export async function validateController(
 ) {
   const { checkInId } = ValidateCheckInParamsSchema.parse(request.params)
 
-  console.log(checkInId)
-
   const validateCheckInUseCase = makeValidateCheckInUseCase()
 
   try{
