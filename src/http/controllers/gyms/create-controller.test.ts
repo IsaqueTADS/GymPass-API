@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '@/app.js'
-import { createAndAuthenticateUser } from '@/http/utils/test/create-and-authenticate-user.js'
+import {  createAndAuthenticateUserAdmin } from '@/http/utils/test/create-and-authenticate-user.js'
 
 describe('Profile Controller (e2e)', async () => {
   beforeAll(async () => {
@@ -12,7 +12,7 @@ describe('Profile Controller (e2e)', async () => {
   })
 
   it('Deve ser possivel cadastrar uma academia', async () => {
-    const { token } = await createAndAuthenticateUser(app)
+    const { token, user } = await createAndAuthenticateUserAdmin(app)
 
     const gymData = {
       title: 'Os marambosos progamers',
@@ -29,8 +29,6 @@ describe('Profile Controller (e2e)', async () => {
       .send(gymData)
 
     expect(response.statusCode).toEqual(201)
-    expect(response.body.gym).toEqual(
-      expect.objectContaining(gymData),
-    )
+    expect(response.body.gym).toEqual(expect.objectContaining(gymData))
   })
 })

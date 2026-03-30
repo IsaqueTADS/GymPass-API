@@ -1,22 +1,19 @@
-import fastifyCookie from '@fastify/cookie'
-import fastifyJwt from '@fastify/jwt'
-import fastifyMultipart from '@fastify/multipart'
-import FastifySwagger from '@fastify/swagger'
-import FastifyApiReference from '@scalar/fastify-api-reference'
 import fastify from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
-  hasZodFastifySchemaValidationErrors,
-  isResponseSerializationError,
-  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
+  type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
-import z, { ZodError } from 'zod'
 import { env } from './env/index.js'
 import { checkInsRoutes } from './http/controllers/checik-ins/routes.js'
 import { gymsRoutes } from './http/controllers/gyms/routes.js'
 import { usersRoutes } from './http/controllers/users/routes.js'
+import { cookiePlugin } from './http/plugins/cookie.js'
+import { corsPlugin } from './http/plugins/cors.js'
+import { errorHandlerPlugin } from './http/plugins/error-handler.js'
+import { jwtPlugin } from './http/plugins/jwt.js'
+import { multipartPlugin } from './http/plugins/multipart.js'
+import { swaggerPlugin } from './http/plugins/swagger.js'
 
 const envToLogger = {
   dev: {
@@ -39,109 +36,13 @@ export const app = fastify({
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
-await app.register(FastifySwagger, {
-  openapi: {
-    openapi: '3.0.0',
-    info: {
-      title: 'GymPass API',
-      description:
-        'A RESTful API built with Fastify for managing gym check-ins, users, and fitness locations. It provides secure authentication, location-based gym search, user registration, and check-in tracking. Designed with scalability and clean architecture principles to support modern fitness applications.',
-      version: '0.1.0',
-    },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-    servers: [
-      {
-        url: env.API_URL,
-        description: 'Development server',
-      },
-    ],
-  },
-  transform: jsonSchemaTransform,
-})
-
-await app.register(FastifyApiReference, {
-  routePrefix: '/docs',
-  configuration: {
-    theme: 'bluePlanet',
-  },
-})
-await app.register(fastifyMultipart, {
-  limits: {
-    fileSize: 10 * 1024 * 1024,
-  },
-})
-
-await app.register(fastifyCookie, {})
-
-await app.register(fastifyJwt, {
-  secret: env.JWT_SECRET,
-  cookie: {
-    cookieName: 'refreshToken',
-    signed: false,
-  },
-  sign: {
-    expiresIn: '10m',
-  },
-})
-
-app.get(
-  '/',
-  {
-    schema: {
-      response: {
-        200: z.object({
-          hello: z.string(),
-        }),
-      },
-    },
-  },
-  (request, reply) => {
-    request.log.info('Some info about the current request')
-
-    reply.status(200).send({ hello: 'world' })
-  },
-)
+await app.register(swaggerPlugin)
+await app.register(multipartPlugin)
+await app.register(cookiePlugin)
+await app.register(jwtPlugin)
+await app.register(errorHandlerPlugin)
+await app.register(corsPlugin)
 
 app.register(usersRoutes)
 app.register(gymsRoutes)
 app.register(checkInsRoutes)
-
-app.setErrorHandler((error, _, reply) => {
-  if (env.NODE_ENV !== 'production') {
-    app.log.error(error)
-  } else {
-    // Algum dia eu coloco log para alguma ferramenta externa em prod, por enquanto essa validação já é suficiente
-  }
-  if (error instanceof ZodError) {
-    return reply
-      .status(400)
-      .send({ message: 'Falha na validação', details: error.format() })
-  }
-
-  if (hasZodFastifySchemaValidationErrors(error)) {
-    console.error(error.message)
-    return reply.code(400).send({
-      message: 'Falha na validação',
-      details: error.validation.map((item) => {
-        return { error: item.message }
-      }),
-    })
-  }
-
-  if (isResponseSerializationError(error)) {
-    return reply.code(500).send({
-      message: 'Falha ao serializar a resposta',
-      details: error.cause.issues,
-    })
-  }
-
-  return reply.status(500).send({ message: 'Internal server error.' })
-})

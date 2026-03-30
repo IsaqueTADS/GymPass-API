@@ -47,7 +47,7 @@ describe('Profile Controller (e2e)', async () => {
       .send()
 
     expect(response.statusCode).toEqual(200)
-    expect(response.body).toEqual([
+    expect(response.body.checkIns).toEqual([
       expect.objectContaining({
         gym_id: gym.id,
         user_id: user.id,

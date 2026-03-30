@@ -6,6 +6,7 @@ export default defineConfig({
   },
   test: {
     dir: 'src',
+    fileParallelism: false,
     projects: [
       {
         extends: true,

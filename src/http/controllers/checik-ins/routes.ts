@@ -44,7 +44,7 @@ export const checkInsRoutes: FastifyPluginAsyncZod = async (app) => {
         200: CheckInResponseSchema,
       },
     },
-    url: '/check-ins/:checkInId/validade',
+    url: '/check-ins/:checkInId/validate',
     handler: validateController,
   })
   app.route({

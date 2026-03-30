@@ -11,7 +11,6 @@ export class InMemoryUploadGateway implements UploadGateway {
   async sendUploadFile(data: UploadFileDTO): Promise<UploadGatewayResponse> {
     const publicId = `gympass-fake-${randomUUID()}`
 
-    
     for await (const _chunk of data.file) {
       // apenas consumindo o stream
     }
@@ -21,7 +20,6 @@ export class InMemoryUploadGateway implements UploadGateway {
       public_id: publicId,
     }
 
-   
     this.uploads.push({ ...data, ...response })
 
     return response

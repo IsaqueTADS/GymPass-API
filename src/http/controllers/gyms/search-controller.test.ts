@@ -1,7 +1,8 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '@/app.js'
-import { createAndAuthenticateUser } from '@/http/utils/test/create-and-authenticate-user.js'
+import { createAndAuthenticateUser, createAndAuthenticateUserAdmin } from '@/http/utils/test/create-and-authenticate-user.js'
+import { prisma } from '@/lib/prisma.js'
 
 describe('Profile Controller (e2e)', async () => {
   beforeAll(async () => {
@@ -11,8 +12,9 @@ describe('Profile Controller (e2e)', async () => {
     await app.close()
   })
 
-  it(' Deve ser possivel o usuário buscar academias pelo nome', async () => {
-    const { token } = await createAndAuthenticateUser(app)
+  it('Deve ser possivel o usuário buscar academias pelo nome', async () => {
+    const {token: tokenAdmin} = await createAndAuthenticateUserAdmin(app)
+    const { token : tokenMember } = await createAndAuthenticateUser(app)
 
     const gymData = {
       title: 'Os marambosos progamers',
@@ -23,14 +25,16 @@ describe('Profile Controller (e2e)', async () => {
       latitude: -42.0612613,
     }
 
+  
+
     await request(app.server)
       .post('/gyms')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${tokenAdmin}`)
       .send(gymData)
 
     await request(app.server)
       .post('/gyms')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${tokenAdmin}`)
       .send({
         title: 'Somente progamador sedentario',
         description:
@@ -43,7 +47,7 @@ describe('Profile Controller (e2e)', async () => {
     const response = await request(app.server)
       .get('/gyms/search')
       .query({ query: 'Os marambosos progamers' })
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${tokenMember}`)
       .send()
 
     expect(response.statusCode).toEqual(200)
