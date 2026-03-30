@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '@/app.js'
-import { createAndAuthenticateUser } from '@/http/utils/test/create-and-authenticate-user.js'
+import { createAndAuthenticateUser, createAndAuthenticateUserAdmin } from '@/http/utils/test/create-and-authenticate-user.js'
 
 describe('Profile Controller (e2e)', async () => {
   beforeAll(async () => {
@@ -12,7 +12,8 @@ describe('Profile Controller (e2e)', async () => {
   })
 
   it('Deve ser possivel o usuário buscar academias próximas (10km);', async () => {
-    const { token } = await createAndAuthenticateUser(app)
+    const { token: TokenMember } = await createAndAuthenticateUser(app)
+    const { token: tokenAdmin } = await createAndAuthenticateUserAdmin(app)
 
     const gymData = {
       title: 'Os marambosos progamers',
@@ -25,12 +26,12 @@ describe('Profile Controller (e2e)', async () => {
 
     await request(app.server)
       .post('/gyms')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${tokenAdmin}`)
       .send(gymData)
 
     await request(app.server)
       .post('/gyms')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${tokenAdmin}`)
       .send({
         title: 'Somente progamador sedentario',
         description:
@@ -42,7 +43,7 @@ describe('Profile Controller (e2e)', async () => {
 
     const response = await request(app.server)
       .get('/gyms/nearby')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${TokenMember}`)
       .query({ userLongitude: -16.8495227, userLatitude: -42.0612613 })
       .send()
 
