@@ -51,6 +51,7 @@ export class UploadImageGymUseCase {
       const { url, public_id } = await this.uploadGataway.sendUploadFile(
         data,
         newFileName,
+        "gyms_images"
       )
 
       const gym = await this.gymsRepository.uploadImage(gymId, url)
