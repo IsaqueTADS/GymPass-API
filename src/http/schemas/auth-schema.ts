@@ -4,6 +4,7 @@ export const User = z.object({
   id: z.uuid(),
   name: z.string(),
   image_url: z.string().nullable(),
+  role: z.enum(['MEMBER', 'ADMIN']),
   email: z.email(),
   created_at: z.date(),
 })

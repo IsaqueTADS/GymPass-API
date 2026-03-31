@@ -19,7 +19,11 @@ export async function uploadUserAvatarController(
       data: fileUpload,
     })
 
-    return reply.status(201).send({ ...result.user, password_hash: undefined })
+    console.log({ ...result.user, password_hash: undefined })
+
+    return reply
+      .status(201)
+      .send({ user: { ...result.user, password_hash: undefined } })
   } catch (err) {
     if (err instanceof FailedUploadError) {
       return reply.status(400).send({ message: err.message })
