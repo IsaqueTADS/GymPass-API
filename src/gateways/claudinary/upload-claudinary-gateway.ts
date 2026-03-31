@@ -24,7 +24,7 @@ export class UploadClaudinaryGateway implements UploadGateway {
       return new Promise((resolve, rejects) => {
         const stream = cloudinary.uploader.upload_stream(
           {
-            folder: folder ? `gympass_api${folder}` : `gympass_api`,
+            folder: folder ? `gympass_api/${folder}` : `gympass_api`,
             public_id: fileName,
             overwrite: true, 
           },
