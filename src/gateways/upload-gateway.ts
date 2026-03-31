@@ -10,7 +10,7 @@ export interface UploadFileDTO {
 
 export type Folder = 'profiles' | 'gyms_images'
 
-export type GympassFileName = `gympass-${string}-${string}-${string}`
+export type GympassFileName = `gympass-${string}--${string}-${string}`
 
 export interface UploadGatewayResponse {
   url: string
@@ -20,7 +20,7 @@ export interface UploadGatewayResponse {
 export interface UploadGateway {
   /**
    * @param fileName - O nome formatado do arquivo.
-   * **Importante:** Deve seguir o padrão `gympass-{id}-{uuid}-{data}`.
+   * **Importante:** Deve seguir o padrão `gympass-{id}--{uuid}-{data}`.
    * Utilize {@link createGympassFileName} para gerar este valor.
    */
   sendUploadFile(

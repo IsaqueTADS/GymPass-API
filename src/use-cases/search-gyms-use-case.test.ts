@@ -2,25 +2,25 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository.js'
 import { SearchGymsUseCase } from './search-gyms-use-case.js'
 
-let gymRepository: InMemoryGymsRepository
+let gymsRepository: InMemoryGymsRepository
 
 let sut: SearchGymsUseCase
 
 describe('Search gyms use case', () => {
   beforeEach(() => {
-    gymRepository = new InMemoryGymsRepository()
-    sut = new SearchGymsUseCase(gymRepository)
+    gymsRepository = new InMemoryGymsRepository()
+    sut = new SearchGymsUseCase(gymsRepository)
   })
 
   it('Deve ser possivel pesquisar academia', async () => {
-    await gymRepository.create({
+    await gymsRepository.create({
       title: 'Os marambosos progamers',
       description: '',
       phone: '',
       longitude: -16.8495227,
       latitude: -42.0612613,
     })
-    await gymRepository.create({
+    await gymsRepository.create({
       title: 'Tropa de elite da progamação',
       description: '',
       phone: '',
@@ -42,7 +42,7 @@ describe('Search gyms use case', () => {
     // const userId = randomUUID()
 
     for (let i = 1; i <= 25; i++) {
-      await gymRepository.create({
+      await gymsRepository.create({
         title: `gym-${i}`,
         description: '',
         phone: '',
