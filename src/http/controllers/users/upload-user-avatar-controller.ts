@@ -19,8 +19,6 @@ export async function uploadUserAvatarController(
       data: fileUpload,
     })
 
-    console.log({ ...result.user, password_hash: undefined })
-
     return reply
       .status(201)
       .send({ user: { ...result.user, password_hash: undefined } })
