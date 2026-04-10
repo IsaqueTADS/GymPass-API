@@ -10,13 +10,15 @@ RUN npm ci
 
 
 COPY . .
-
+ 
+ENV DATABASE_URL="postgresql://docker:docker@localhost:5432/gympass?schema=public"n
 RUN npx prisma generate
 
 RUN npm run build
 
-WORKDIR /app
+FROM node:24-slim AS runner
 
+WORKDIR /app
 
 ENV NODE_ENV=production
 
