@@ -1,7 +1,11 @@
-import type { MultipartFile } from '@fastify/multipart'
 import { v2 as cloudinary, type UploadApiResponse } from 'cloudinary'
 import { env } from '@/env/index.js'
-import type { UploadFileDTO, UploadGateway } from '../upload-gateway.js'
+import type {
+  Folder,
+  GympassFileName,
+  UploadFileDTO,
+  UploadGateway,
+} from '../upload-gateway.js'
 
 export class UploadClaudinaryGateway implements UploadGateway {
   constructor() {
@@ -11,11 +15,19 @@ export class UploadClaudinaryGateway implements UploadGateway {
       api_secret: env.CLOUDINARY_SECRET,
     })
   }
-  async sendUploadFile(data: UploadFileDTO) {
+  async sendUploadFile(
+    data: UploadFileDTO,
+    fileName: GympassFileName,
+    folder?: Folder,
+  ) {
     const uploadToCloudinary = () => {
       return new Promise((resolve, rejects) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: 'gympass_api' },
+          {
+            folder: folder ? `gympass_api/${folder}` : `gympass_api`,
+            public_id: fileName,
+            overwrite: true, 
+          },
           (error, result) => {
             if (error) rejects(new Error('Não foi possivel realizar o upload'))
             else resolve(result)

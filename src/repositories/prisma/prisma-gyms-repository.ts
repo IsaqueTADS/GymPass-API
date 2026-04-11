@@ -9,6 +9,18 @@ import type {
 } from '../gyms-repository.js'
 
 export class PrismaGymsRepository implements GymsRepository {
+  async uploadImage(gymId: string, imageUrl: string) {
+    const gym = await prisma.gym.update({
+      where: {
+        id: gymId,
+      },
+      data: {
+        image_url: imageUrl,
+      },
+    })
+
+    return this.mapToGym(gym)
+  }
   async searchMany(query: string, page: number) {
     const gyms = await prisma.gym.findMany({
       where: {
@@ -63,6 +75,7 @@ export class PrismaGymsRepository implements GymsRepository {
       id: gym.id,
       title: gym.title,
       description: gym.description,
+      image_url: gym.image_url,
       phone: gym.phone,
       latitude: gym.latitude.toNumber(),
       longitude: gym.longitude.toNumber(),

@@ -7,11 +7,13 @@ import {
   GymsResponseSchema,
   SearchGymsQuerySchema,
   SearchGymsResponseSchema,
+  UploadImageParamsSchema,
 } from '@/http/schemas/gyms-schema.js'
 import { VerifyJWT } from '../../middlewares/verify-jwt.js'
 import { createController } from './create-controller.js'
 import { nearbyController } from './nearby-controller.js'
 import { searchController } from './search-controller.js'
+import { uploadImageController } from './upload-image-controller.js'
 
 export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRequest', VerifyJWT)
@@ -31,7 +33,23 @@ export const gymsRoutes: FastifyPluginAsyncZod = async (app) => {
     },
     handler: createController,
   })
+  app.route({
+    method: 'PATCH',
+    url: '/gyms/:gymId/upload',
+    onRequest: [VerifyUserRole('ADMIN')],
+    schema: {
+      security: [{ bearerAuth: [] }],
+      tags: ['gyms'],
+      summary: 'upload image to gyms',
+      params: UploadImageParamsSchema,
+      response: {
+        200: GymsResponseSchema,
+      },
+    },
+    handler: uploadImageController,
+  })
 
+  //MEMBER ACESS
   app.route({
     method: 'GET',
     url: '/gyms/search',

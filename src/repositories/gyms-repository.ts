@@ -7,6 +7,7 @@ export interface FindManyGymsNearByParams {
 }
 
 export interface GymsRepository {
+  uploadImage(gymId: string, imageUrl: string): Promise<Gym>
   searchMany(query: string, page: number): Promise<Gym[]>
   findManyGymsNearBy(params: FindManyGymsNearByParams): Promise<Gym[]>
   findById(id: string): Promise<Gym | null>

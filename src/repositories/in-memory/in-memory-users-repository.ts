@@ -40,13 +40,14 @@ export class InMemoryUsersRepository implements usersRepository {
     return user
   }
   async create(data: CreateUserDTO) {
-    const user = {
+    const user: User = {
       id: randomUUID(),
       name: data.name,
       email: data.email,
       image_url: null,
       password_hash: data.password_hash,
       created_at: new Date(),
+      role: 'MEMBER',
     }
 
     this.items.push(user)
