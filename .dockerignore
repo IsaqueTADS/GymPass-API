@@ -1,6 +1,5 @@
 node_modules
 npm-debug.log
-dist
 .git
 .env
 Dockerfile
@@ -11,15 +10,11 @@ Dockerfile
 .test
 .vscode
 @request
-build
 coverage
-docker
-docs
-task
 uploads
 .biomeignore
 .env.test
 .env.example
 vitest.config.ts
-
-
+*.test.ts
+prisma/migrations
