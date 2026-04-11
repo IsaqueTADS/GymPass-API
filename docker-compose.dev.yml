@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: bitnami/postgresql
+    container_name: gympass_postgres
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=gympass
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/setup.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gympass-network
+
+  gympass-api:
+    container_name: gympass_api_dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://docker:docker@postgres:5432/gympass?schema=public
+      - JWT_SECRET=dev-secret-123
+      - CLOUDINARY_KEY=dev-key
+      - CLOUDINARY_SECRET=dev-secret
+      - CLOUDINARY_NAME=dev
+      - API_URL=http://localhost:3333
+      - PORT=3333
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - gympass-network
+
+networks:
+  gympass-network:
+    driver: bridge
