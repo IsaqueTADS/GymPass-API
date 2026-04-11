@@ -9,6 +9,15 @@ jobs:
     name: Run E2E Tests
     runs-on: ubuntu-latest
 
+    env:
+      JWT_SECRET: testelouco
+      DATABASE_URL: "postgresql://docker:docker@localhost:5432/gympass?schema=public"
+      NODE_ENV: test
+      CLOUDINARY_KEY: "test-key"
+      CLOUDINARY_SECRET: "test-secret"
+      CLOUDINARY_NAME: "test-name"
+      FRONTEND_URL: "http://localhost:3000"
+
     services:
       postgres:
         image: bitnami/postgresql:latest
@@ -37,16 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        
+      - name: Run Migrations
+        run: npx prisma migrate deploy
+
       - name: Run E2E Tests
         run: npm run test:e2e
-        env:
-          JWT_SECRET: testelouco
-          DATABASE_URL: "postgresql://docker:docker@localhost:5432/gympass?schema=public"
-          NODE_ENV: test
-
-          # Adicione estas linhas abaixo:
-          CLOUDINARY_KEY: "test-key"
-          CLOUDINARY_SECRET: "test-secret"
-          CLOUDINARY_NAME: "test-name"
-          FRONTEND_URL: "http://localhost:3000"
-          NODE_ENV: test
+       
+         

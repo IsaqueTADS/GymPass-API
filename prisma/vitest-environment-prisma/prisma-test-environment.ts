@@ -20,7 +20,7 @@ export default (<Environment>{
     try {
       await truncateTables()
     } catch {
-      execSync('npm run db:migrate:deploy', {
+      execSync('dotenv -e .env.test npm run db:migrate:deploy', {
         stdio: 'inherit',
         env: { ...process.env },
       })

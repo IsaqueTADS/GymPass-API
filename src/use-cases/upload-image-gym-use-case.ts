@@ -1,10 +1,11 @@
 import type { Readable } from 'node:stream'
-import type { User } from '@/dtos/user/user.js'
+import type { Gym } from '@/dtos/gyms/gym.js'
 import type { UploadGateway } from '@/gateways/upload-gateway.js'
-import type { usersRepository } from '@/repositories/users-repository.js'
+import type { GymsRepository } from '@/repositories/gyms-repository.js'
 import { createGympassFileName } from '@/utils/create-gympass-file-name.js'
 import { FailedUploadError } from './errors/failed-upload-error.js'
 import { InvalidFileTypeError } from './errors/Invalid-file-type-error.js'
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 
 interface UploadDataDTO {
   file: Readable
@@ -13,26 +14,31 @@ interface UploadDataDTO {
   encoding: string
 }
 
-interface UpadteUserAvatarUseCaseRequest {
-  userId: string
+interface UploadImageGymUseCaseRequest {
+  gymId: string
   data: UploadDataDTO
 }
 
-interface UpadteUserAvatarUseCaseResponse {
-  user: User
+interface UploadImageGymUseCaseResponse {
+  gym: Gym
   publicId: string
 }
 
-export class UpadateUserAvatarUseCase {
+export class UploadImageGymUseCase {
   constructor(
-    private userRepository: usersRepository,
+    private gymsRepository: GymsRepository,
     private uploadGataway: UploadGateway,
   ) {}
 
   async execute({
-    userId,
+    gymId,
     data,
-  }: UpadteUserAvatarUseCaseRequest): Promise<UpadteUserAvatarUseCaseResponse> {
+  }: UploadImageGymUseCaseRequest): Promise<UploadImageGymUseCaseResponse> {
+    const gym = await this.gymsRepository.findById(gymId)
+    if (!gym) {
+      throw new ResourceNotFoundError()
+    }
+
     const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png']
 
     if (!allowedMimeTypes.includes(data.mimetype)) {
@@ -40,17 +46,18 @@ export class UpadateUserAvatarUseCase {
     }
 
     try {
-      const newFileName = createGympassFileName(userId)
+      const newFileName = createGympassFileName(gymId)
+
       const { url, public_id } = await this.uploadGataway.sendUploadFile(
         data,
         newFileName,
-        'profiles',
+        "gyms_images"
       )
-      const user = await this.userRepository.updateAvatar(userId, url)
 
-      return { user, publicId: public_id ?? '' }
-    } catch (err) {
-      console.log(err)
+      const gym = await this.gymsRepository.uploadImage(gymId, url)
+
+      return { gym, publicId: public_id ?? '' }
+    } catch {
       throw new FailedUploadError()
     }
   }

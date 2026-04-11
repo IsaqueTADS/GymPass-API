@@ -1,8 +1,10 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '@/app.js'
-import { createAndAuthenticateUser, createAndAuthenticateUserAdmin } from '@/http/utils/test/create-and-authenticate-user.js'
-import { prisma } from '@/lib/prisma.js'
+import {
+  createAndAuthenticateUser,
+  createAndAuthenticateUserAdmin,
+} from '@/http/utils/test/create-and-authenticate-user.js'
 
 describe('Profile Controller (e2e)', async () => {
   beforeAll(async () => {
@@ -13,8 +15,8 @@ describe('Profile Controller (e2e)', async () => {
   })
 
   it('Deve ser possivel o usuário buscar academias pelo nome', async () => {
-    const {token: tokenAdmin} = await createAndAuthenticateUserAdmin(app)
-    const { token : tokenMember } = await createAndAuthenticateUser(app)
+    const { token: tokenAdmin } = await createAndAuthenticateUserAdmin(app)
+    const { token: tokenMember } = await createAndAuthenticateUser(app)
 
     const gymData = {
       title: 'Os marambosos progamers',
@@ -24,8 +26,6 @@ describe('Profile Controller (e2e)', async () => {
       longitude: -16.8495227,
       latitude: -42.0612613,
     }
-
-  
 
     await request(app.server)
       .post('/gyms')

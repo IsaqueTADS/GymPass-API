@@ -10,6 +10,21 @@ import type {
 export class InMemoryGymsRepository implements GymsRepository {
   public items: Gym[] = []
 
+  async uploadImage(gymId: string, imageUrl: string): Promise<Gym> {
+    const gymIndex = this.items.findIndex((item) => item.id === gymId)
+
+    const gym = this.items[gymIndex]
+
+    const updateGym = {
+      ...gym,
+      image_url: imageUrl,
+    }
+
+    this.items[gymIndex] = updateGym
+
+    return updateGym
+  }
+
   async findManyGymsNearBy(params: FindManyGymsNearByParams): Promise<Gym[]> {
     return this.items.filter((item) => {
       const distance = getDistanceBetweenCoordinates(
@@ -31,6 +46,7 @@ export class InMemoryGymsRepository implements GymsRepository {
     const gym = {
       id: data.id ?? randomUUID(),
       title: data.title,
+      image_url: null,
       description: data.description ?? null,
       phone: data.phone,
       latitude: data.latitude,

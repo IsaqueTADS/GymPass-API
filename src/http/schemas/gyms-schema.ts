@@ -4,6 +4,7 @@ export const Gym = z.object({
   id: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
+  image_url: z.string().nullable(),
   phone: z.string().nullable(),
   latitude: z.coerce.number(),
   longitude: z.coerce.number(),
@@ -33,6 +34,10 @@ export const FetchNearbyGymsQuerySchema = z.object({
   userLongitude: z.coerce.number().refine((value) => Math.abs(value) <= 180, {
     message: 'Longitude inválida',
   }),
+})
+
+export const UploadImageParamsSchema = z.object({
+  gymId: z.uuid(),
 })
 
 export const GymsResponseSchema = z.object({
