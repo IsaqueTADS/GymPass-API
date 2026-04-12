@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-cd /app/gympass_api/
-
+cd /app/
 echo "Running migrations..."
 
 npx prisma migrate deploy 
