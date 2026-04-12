@@ -12,6 +12,11 @@ services:
       - ./docker/setup.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - gympass-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "docker"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   gympass-api:
     container_name: gympass_api_dev
@@ -34,9 +39,11 @@ services:
       - .:/app
       - /app/node_modules
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - gympass-network
+    command: ["npm", "run", "dev"]
 
 networks:
   gympass-network:
