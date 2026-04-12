@@ -16,6 +16,9 @@ echo "Installing dependencies..."
 cd /app/gympass_api/
 npm install
 
+echo "Generating build on EC2..."
+npm run build
+
 # Build Docker images
 echo "Building Docker Images..."
 ./docker/production-build.sh
