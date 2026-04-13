@@ -27,9 +27,10 @@ RUN npm install -g pm2
 COPY package.json ./
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
+COPY --from=builder /app/docker ./docker
 
 RUN npm install --omit=dev
 
 EXPOSE 3333
 
-CMD ["pm2-runtime", "start", "npm", "--", "start"]
+CMD ["pm2-runtime", "start", "docker/api/pm2/pm2-production.json"]

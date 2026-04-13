@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
 cd /app/
-echo "Running migrations..."
-
-npx prisma migrate deploy 
-
-echo "Generating Prisma Client..."
-npx prisma generate
 
 echo 'Starting API with PM2...'
 if [ "$NODE_ENV" == "development" ]
