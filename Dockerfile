@@ -18,6 +18,8 @@ RUN npm run build
 # Production stage
 FROM node:24-slim AS runner
 
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -25,6 +27,10 @@ ENV NODE_ENV=production
 RUN npm install -g pm2
 
 COPY package.json ./
+
+RUN mkdir -p prisma
+COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
+
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
 COPY --from=builder /app/docker ./docker
