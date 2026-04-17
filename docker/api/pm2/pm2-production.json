@@ -11,14 +11,7 @@
       "env": {
         "NODE_ENV": "production",
         "PORT": 3333,
-        "HOST": "0.0.0.0",
-        "DATABASE_URL": "${DATABASE_URL}",
-        "JWT_SECRET": "${JWT_SECRET}",
-        "CLOUDINARY_KEY": "${CLOUDINARY_KEY}",
-        "CLOUDINARY_SECRET": "${CLOUDINARY_SECRET}",
-        "CLOUDINARY_NAME": "${CLOUDINARY_NAME}",
-        "API_URL": "${API_URL}",
-        "FRONTEND_URL": "${FRONTEND_URL}"
+        "HOST": "0.0.0.0"
       }
     }
   ]
