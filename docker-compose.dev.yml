@@ -19,7 +19,7 @@ services:
       retries: 5
 
   gympass-api:
-    container_name: gympass_api_dev
+    container_name: gympass-api
     build:
       context: .
       dockerfile: Dockerfile
