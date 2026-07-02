@@ -32,7 +32,7 @@
     "test:ui": "dotenv -e .env.test -- vitest --ui"
   },
   "engines": {
-    "node": "24.x"
+    "node": "22.x"
   },
   "keywords": [],
   "author": "",
